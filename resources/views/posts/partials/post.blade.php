@@ -9,6 +9,12 @@
       <input class="btn btn-danger" type="submit" value="DELETE" >
     </div>
   </form>
+  @if ($post->comments_count)
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comments({{$post->comments_count}})</p>
+  @else
+  <p>&nbsp;&nbsp;&nbsp;No Comments</p>
+
+  @endif
 
 </div>
 </div>
