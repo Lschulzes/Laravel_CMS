@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -50,9 +51,19 @@ class RegisterController extends Controller
   public function store(Request $request)
   {
     $data = $request->all();
-    $this->validator($data);
+    $validator = $this->validator($data);
+    if ($validator->fails()) {
+      foreach ($validator->getMessageBag()->getMessages() as $name => $message) {
+        $request->session()->flash($name . "_error", $message[0]);
+      }
+      return redirect()->route('register.index');
+    }
     $this->create($data);
     $request->session()->flash('status', 'Registered successfully');
+    $credentials = $request->only('email', 'password');
+    if (Auth::attempt($credentials)) {
+      return redirect()->route('login.index');
+    }
     return redirect()->route('home.index');
   }
 
