@@ -34,7 +34,7 @@ Route::resource('register', RegisterController::class)->only('index', 'store');
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout');
 
-Route::prefix('/password')->name('password.')->group(function () {
+Route::prefix('/password')->middleware('auth')->name('password.')->group(function () {
   Route::get('/reset', [ResetPasswordController::class, 'request'])->name('request');
   Route::get('/reset/{token}', [ResetPasswordController::class, 'reset'])->name('reset');
   Route::post('/reset', [ResetPasswordController::class, 'update'])->name('update');

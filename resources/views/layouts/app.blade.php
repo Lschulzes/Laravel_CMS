@@ -28,7 +28,7 @@
         <form action="{{route('login.logout')}}" method="POST" id="logout-form" class="d-inline">
           @csrf
           <a class="p-2 text-dark text-decoration-none " href="#"
-          onclick="event.preventDefault();document.getElementById('logout-form').submit()">Logout</a>
+          onclick="event.preventDefault();document.getElementById('logout-form').submit()">Logout ({{Auth::user()->name}})</a>
         </form>
         @endguest
       </div>
