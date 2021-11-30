@@ -1,8 +1,14 @@
 <?php
 
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostsController;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,57 +28,13 @@ Route::get('/single', AboutController::class);
 
 Route::resource('posts', PostsController::class);
 
-// Route::prefix('/posts')
-//     ->name('posts.')
-//     ->group(function () use ($posts) {
+// AUTH
+Route::resource('login', LoginController::class)->only('index', 'store');
+Route::resource('register', RegisterController::class)->only('index', 'store');
 
-//         Route::get('', function (Request $request) use ($posts) {
-//             return view('posts.index', ['posts' => $posts]);
-//         })->name('index');
-
-//         Route::get("/{id}", function ($id) use ($posts) {
-//             abort_if(!isset($posts[$id]), 404);
-
-//             return view('posts.show', ['post' => $posts[$id]]);
-//         })->name("show");
-
-//         Route::get('/recent/{days_ago?}', function ($days_ago = 20) {
-//             return "We may have $days_ago";
-//         })->where([
-//             'days_ago' => '[0-9]+',
-//         ])->name("recent.index");
-
-//     });
-
-// Route::prefix('/fun')->name('fun.')->group(function () use ($posts) {
-
-//     Route::get('/responses', function () use ($posts) {
-//         return response($posts, 201)
-//             ->header('Content-Type', 'application/json')
-//             ->cookie('MY_COOKIE', 'lschulzes', 1440);
-//     })->name('responses');
-
-//     Route::get('/redirect', function () {
-//         return redirect('/contact');
-//     })->name('redirect');
-
-//     Route::get('/back', function () {
-//         return back();
-//     })->name('back');
-
-//     Route::get('/named-route', function () {
-//         return redirect()->route('posts.show', ['id' => 1]);
-//     })->name('named-route');
-
-//     Route::get('/away', function () {
-//         return redirect()->away('https://google.com');
-//     })->name('away');
-
-//     Route::get('/json', function () use ($posts) {
-//         return response()->json($posts);
-//     })->name('json');
-
-//     Route::get('/download', function () use ($posts) {
-//         return response()->download(public_path('/assets/images/MonkeyKing_0.jpg'), 'Monkey_King.jpg');
-//     })->name('download');
-// });
+Route::prefix('/password')->name('password.')->group(function () {
+  Route::get('/reset', [ResetPasswordController::class, 'request'])->name('request');
+  Route::get('/reset/{token}', [ResetPasswordController::class, 'reset'])->name('reset');
+  Route::post('/reset', [ResetPasswordController::class, 'update'])->name('update');
+  Route::post('/email', [ResetPasswordController::class, 'email'])->name('email');
+});
