@@ -32,6 +32,8 @@ Route::resource('posts', PostsController::class);
 Route::resource('login', LoginController::class)->only('index', 'store');
 Route::resource('register', RegisterController::class)->only('index', 'store');
 
+Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout');
+
 Route::prefix('/password')->name('password.')->group(function () {
   Route::get('/reset', [ResetPasswordController::class, 'request'])->name('request');
   Route::get('/reset/{token}', [ResetPasswordController::class, 'reset'])->name('reset');

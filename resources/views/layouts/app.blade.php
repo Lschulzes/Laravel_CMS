@@ -15,10 +15,22 @@
     <nav class="d-flex flex-column flex-md-row align-items-center justify-content-between p-3 px-md-4 bg-white border-bottom shadow-sm mb-3">
       <h5 class="my-0 mr-md-auto font-weight-normal">Laravel App</h5>
       <div class="links my-2 my-md-0 mr-md-3">
-        <a class="p-2 text-dark" href="{{route('home.index')}}">Home</a>
-        <a class="p-2 text-dark" href="{{route('home.contact')}}">Contact</a>
-        <a class="p-2 text-dark" href="{{route('posts.index')}}">Blog Posts</a>
-        <a class="p-2 text-dark" href="{{route('posts.create')}}">Add Blog Post</a>
+        <a class="p-2 text-dark text-decoration-none " href="{{route('home.index')}}">Home</a>
+        <a class="p-2 text-dark text-decoration-none " href="{{route('home.contact')}}">Contact</a>
+        <a class="p-2 text-dark text-decoration-none " href="{{route('posts.index')}}">Blog Posts</a>
+        @guest
+        @if (Route::has('register.index'))
+        <a class="p-2 text-dark text-decoration-none " href="{{route('register.index')}}">Register</a>
+        @endif
+        <a class="p-2 text-dark text-decoration-none " href="{{route('login.index')}}">Login</a>
+        @else
+        <a class="p-2 text-dark text-decoration-none " href="{{route('posts.create')}}">Add</a>
+        <form action="{{route('login.logout')}}" method="POST" id="logout-form" class="d-inline">
+          @csrf
+          <a class="p-2 text-dark text-decoration-none " href="#"
+          onclick="event.preventDefault();document.getElementById('logout-form').submit()">Logout</a>
+        </form>
+        @endguest
       </div>
     </nav>
   </header>

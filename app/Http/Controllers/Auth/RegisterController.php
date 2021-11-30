@@ -48,22 +48,27 @@ class RegisterController extends Controller
   {
     return view('auth.register');
   }
+
   public function store(Request $request)
   {
     $data = $request->all();
     $validator = $this->validator($data);
+
     if ($validator->fails()) {
       foreach ($validator->getMessageBag()->getMessages() as $name => $message) {
         $request->session()->flash($name . "_error", $message[0]);
       }
       return redirect()->route('register.index');
     }
+
     $this->create($data);
     $request->session()->flash('status', 'Registered successfully');
     $credentials = $request->only('email', 'password');
+
     if (Auth::attempt($credentials)) {
       return redirect()->route('login.index');
     }
+
     return redirect()->route('home.index');
   }
 
