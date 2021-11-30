@@ -58,8 +58,8 @@ class PostsController extends Controller
    */
   public function show($id)
   {
-    $post = BlogPost::findOrFail($id);
-    return view('posts.show', ['post' => $post, 'comments' => $post?->comments ?? []]);
+    $post = BlogPost::with('comments')->findOrFail($id);
+    return view('posts.show', ['post' => $post]);
   }
 
   /**
