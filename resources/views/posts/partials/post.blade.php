@@ -9,7 +9,7 @@
   @endif
 @else
 <div class="actions d-flex">
-  @if ($post->user->id === Auth::id())
+  @if (Gate::forUser(Auth::user())->allows('edit-post',$post))
   <a href="{{route('posts.edit', ['post' => $post->id])}}" class="btn btn-primary mr-2">EDIT</a>
   <form action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST">
     @csrf

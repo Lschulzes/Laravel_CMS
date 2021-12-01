@@ -7,9 +7,11 @@
   @csrf
   @method('PUT')
   @include('posts.partials.form')
+  @if (Gate::forUser(Auth::user())->allows('update-post',$post))
   <div>
     <input type="submit" value="Update" class="btn btn-primary btn-block mt-2">
   </div>
+  @endif
 
 </form>
 <form action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST">

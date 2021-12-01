@@ -27,24 +27,30 @@ class AuthServiceProvider extends ServiceProvider
   {
     $this->registerPolicies();
 
-    Gate::define('update-post', fn ($user, $post) => $this->canUpdatePost($user, $post));
-    Gate::define('edit-post', fn ($user, $post) => $this->canEditPost($user, $post));
-    Gate::define('delete-post', fn ($user, $post) => $this->canDeletePost($user, $post));
+    // Gate::define('update-post', fn ($user, $post) => $this->canUpdatePost($user, $post));
+    // Gate::define('edit-post', fn ($user, $post) => $this->canEditPost($user, $post));
+    // Gate::define('delete-post', fn ($user, $post) => $this->canDeletePost($user, $post));
+    // Gate::before(fn ($user, $ability) => $this->adminHasAbility($user, $ability));
+
+    // Gate::define('posts.update', 'App\Policies\BlogPostPolicy@update');
+    // Gate::define('posts.delete', 'App\Policies\BlogPostPolicy@delete');
+
+    Gate::resource('posts', 'App\Policies\BlogPostPolicy');
   }
 
-  public function canUpdatePost(User $user, BlogPost $post)
+  protected function canUpdatePost(User $user, BlogPost $post)
   {
     return $this->isPostAuthor($user, $post);
   }
 
-  public function canDeletePost(User $user, BlogPost $post)
+  protected function canDeletePost(User $user, BlogPost $post)
   {
     return $this->isPostAuthor($user, $post);
   }
 
-  public function canEditPost(User $user, BlogPost $post)
+  protected function canEditPost(User $user, BlogPost $post)
   {
-    return $this->isPostAuthor($user, $post) || $this->isSuperAdmin($user, $post);
+    return $this->isPostAuthor($user, $post);
   }
 
   private function isPostAuthor(User $user, BlogPost $post): bool
@@ -52,8 +58,8 @@ class AuthServiceProvider extends ServiceProvider
     return $user->id === $post->user->id ? true : false;
   }
 
-  private function isSuperAdmin(User $user, BlogPost $post): bool
+  private function adminHasAbility(User $user, $ability): bool
   {
-    return $user->id === 1 ? true : false;
+    return $user->is_admin && in_array($ability, ['posts.update', 'posts.delete']);
   }
 }
