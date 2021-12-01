@@ -19,14 +19,14 @@ class BlogPost extends Model
 
 
 
-  // public static function boot()
-  // {
-  //   parent::boot();
-  //   static::deleting(fn (BlogPost $post) => self::onDelete($post));
-  // }
+  public static function boot()
+  {
+    parent::boot();
+    static::deleting(fn (BlogPost $post) => self::onDelete($post));
+  }
 
-  // public static function onDelete(BlogPost $post)
-  // {
-  //   $post->comments()->delete();
-  // }
+  public static function onDelete(BlogPost $post)
+  {
+    $post->comments()->delete();
+  }
 }
