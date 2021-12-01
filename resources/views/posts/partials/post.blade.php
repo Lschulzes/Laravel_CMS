@@ -9,16 +9,6 @@
   @endif
 @else
 <div class="actions d-flex">
-  @if (Gate::forUser(Auth::user())->allows('edit-post',$post))
-  <a href="{{route('posts.edit', ['post' => $post->id])}}" class="btn btn-primary mr-2">EDIT</a>
-  <form action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST">
-    @csrf
-    @method('DELETE')
-    <div>
-      <input class="btn btn-danger" type="submit" value="DELETE" >
-    </div>
-  </form>
-  @endif
   <p>
     Added by {{$post->user->name}}
   </p>
@@ -28,7 +18,18 @@
   <p>&nbsp;&nbsp;&nbsp;No Comments</p>
 
   @endif
-
+  @if (Gate::forUser(Auth::user())->allows('update',$post))
+  <a href="{{route('posts.edit', ['post' => $post->id])}}" class="btn btn-primary mr-2">EDIT</a>
+  @endif
+  @if (Gate::forUser(Auth::user())->allows('delete',$post))
+  <form action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST">
+    @csrf
+    @method('DELETE')
+    <div>
+      <input class="btn btn-danger" type="submit" value="DELETE" >
+    </div>
+  </form>
+  @endif
 </div>
 @endguest
 </div>

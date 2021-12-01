@@ -36,7 +36,7 @@ class PostsController extends Controller
    */
   public function create()
   {
-    $this->authorize('posts.create');
+    $this->authorize('create');
     return view('posts.create');
   }
 
@@ -76,7 +76,7 @@ class PostsController extends Controller
    */
   public function edit($id)
   {
-    $this->authorize('posts.update',  BlogPost::find($id));
+    $this->authorize('update',  BlogPost::find($id));
     return view('posts.edit', ['post' => BlogPost::findOrFail($id)]);
   }
 
@@ -90,7 +90,7 @@ class PostsController extends Controller
   public function update(StorePost $request, $id)
   {
     $post = BlogPost::findOrFail($id);
-    $this->authorize('posts.update', $post);
+    $this->authorize('update', $post);
     $validated = $request->validated();
     $post->fill($validated)->save();
     $request->session()->flash('status', "Blog post Updated successfully");
@@ -106,7 +106,7 @@ class PostsController extends Controller
   public function destroy($id)
   {
     $post = BlogPost::findOrFail($id);
-    $this->authorize('posts.delete', $post);
+    $this->authorize($post);
     $post->delete();
     session()->flash('status', "Blog post Deleted successfully");
     return redirect()->route('posts.index');
