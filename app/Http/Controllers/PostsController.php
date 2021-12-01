@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PostsController extends Controller
 {
@@ -74,6 +75,7 @@ class PostsController extends Controller
    */
   public function edit($id)
   {
+    $this->authorize('edit-post',  BlogPost::find($id));
     return view('posts.edit', ['post' => BlogPost::findOrFail($id)]);
   }
 
@@ -87,6 +89,7 @@ class PostsController extends Controller
   public function update(StorePost $request, $id)
   {
     $post = BlogPost::findOrFail($id);
+    $this->authorize('update-post', $post);
     $validated = $request->validated();
     $post->fill($validated)->save();
     $request->session()->flash('status', "Blog post Updated successfully");
@@ -102,6 +105,7 @@ class PostsController extends Controller
   public function destroy($id)
   {
     $post = BlogPost::findOrFail($id);
+    $this->authorize('delete-post', $post);
     $post->delete();
     session()->flash('status', "Blog post Deleted successfully");
     return redirect()->route('posts.index');

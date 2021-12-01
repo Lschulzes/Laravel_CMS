@@ -14,7 +14,7 @@ class BlogPostFactory extends Factory
   public function definition()
   {
     return [
-      'title' => $this->faker->sentence(),
+      'title' => $this->faker->sentence(2),
       'content' => $this->faker->realText()
     ];
   }

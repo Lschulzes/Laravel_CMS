@@ -9,6 +9,7 @@
   @endif
 @else
 <div class="actions d-flex">
+  @if ($post->user->id === Auth::id())
   <a href="{{route('posts.edit', ['post' => $post->id])}}" class="btn btn-primary mr-2">EDIT</a>
   <form action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST">
     @csrf
@@ -17,6 +18,10 @@
       <input class="btn btn-danger" type="submit" value="DELETE" >
     </div>
   </form>
+  @endif
+  <p>
+    Added by {{$post->user->name}}
+  </p>
   @if ($post->comments_count)
   <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comments({{$post->comments_count}})</p>
   @else
