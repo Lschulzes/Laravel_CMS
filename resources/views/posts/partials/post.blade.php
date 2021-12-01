@@ -18,10 +18,11 @@
   <p>&nbsp;&nbsp;&nbsp;No Comments</p>
 
   @endif
-  @if (Gate::forUser(Auth::user())->allows('update',$post))
+
+  @can ('update',$post)
   <a href="{{route('posts.edit', ['post' => $post->id])}}" class="btn btn-primary mr-2">EDIT</a>
-  @endif
-  @if (Gate::forUser(Auth::user())->allows('delete',$post))
+  @endcan
+  @can ('delete',$post)
   <form action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST">
     @csrf
     @method('DELETE')
@@ -29,7 +30,7 @@
       <input class="btn btn-danger" type="submit" value="DELETE" >
     </div>
   </form>
-  @endif
+  @endcan
 </div>
 @endguest
 </div>

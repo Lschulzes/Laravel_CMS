@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\BlogPost;
-use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -18,7 +16,6 @@ class AuthServiceProvider extends ServiceProvider
     // 'App\Models\Model' => 'App\Policies\ModelPolicy',
     'App\BlogPost' => 'App\Policies\BlogPostPolicy',
   ];
-
   /**
    * Register any authentication / authorization services.
    *
@@ -27,5 +24,11 @@ class AuthServiceProvider extends ServiceProvider
   public function boot()
   {
     $this->registerPolicies();
+
+    Gate::define('home.secret', fn ($user) => $user->is_admin);
+
+    Gate::before(function ($user, $ability) {
+      if ($user->is_admin && in_array($ability, ['delete'])) return true;
+    });
   }
 }
