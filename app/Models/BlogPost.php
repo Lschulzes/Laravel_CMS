@@ -23,9 +23,15 @@ class BlogPost extends Model
   {
     parent::boot();
     static::deleting(fn (BlogPost $post) => self::onDelete($post));
+    static::restoring(fn (BlogPost $post) => self::onRestore($post));
   }
 
   public static function onDelete(BlogPost $post)
+  {
+    $post->comments()->delete();
+  }
+
+  public static function  onRestore(BlogPost $post)
   {
     $post->comments()->delete();
   }
