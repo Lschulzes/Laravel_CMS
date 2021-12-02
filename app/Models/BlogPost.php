@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Scopes\LatestScope;
+use App\Scopes\DeletedAdminScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -25,10 +26,20 @@ class BlogPost extends Model
 
   public static function boot()
   {
+    static::addGlobalScope(new DeletedAdminScope);
     parent::boot();
     static::deleting(fn (BlogPost $post) => self::onDelete($post));
     static::restoring(fn (BlogPost $post) => self::onRestore($post));
-    static::addGlobalScope(new LatestScope);
+  }
+
+  public function scopeLatest(Builder $query)
+  {
+    return $query->orderBy(static::CREATED_AT, 'desc');
+  }
+
+  public function scopeMostComments(Builder $query)
+  {
+    return $query->withCount('comments')->orderBy('comments_count', 'desc');
   }
 
   public static function onDelete(BlogPost $post)
@@ -36,7 +47,7 @@ class BlogPost extends Model
     $post->comments()->delete();
   }
 
-  public static function  onRestore(BlogPost $post)
+  public static function onRestore(BlogPost $post)
   {
     $post->comments()->delete();
   }

@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
-class PostController extends Controller
+class BlogPostController extends Controller
 {
   public function __construct()
   {
@@ -21,13 +22,11 @@ class PostController extends Controller
    */
   public function index()
   {
-    $posts = BlogPost::withCount([
-      'comments',
-      // 'comments as new_comments' => function ($query) {
-      //   $query->where('created_at', '>=', '2021-11-28 18:46:13');
-      // }
-    ])->get();
-    return view('posts.index', ['posts' => $posts]);
+    $posts = BlogPost::mostComments()->get();
+    return view('posts.index', [
+      'posts' => $posts,
+      'mostActiveLastMonth' => User::withMostBlogPostsLastMonth()->take(5)->get()
+    ]);
   }
 
   /**
@@ -65,7 +64,9 @@ class PostController extends Controller
    */
   public function show($id)
   {
-    $post = BlogPost::with('comments')->findOrFail($id);
+    $post = BlogPost::with([
+      'comments' => fn ($query) => $query->latest()
+    ])->findOrFail($id);
     return view('posts.show', ['post' => $post]);
   }
 

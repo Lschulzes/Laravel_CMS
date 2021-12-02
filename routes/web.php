@@ -5,7 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\BlogPostController;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Password;
@@ -29,7 +29,7 @@ Route::get('/secret', [HomeController::class, 'secret'])
   ->name('secret')
   ->middleware('can:home.secret');
 
-Route::resource('posts', PostController::class);
+Route::resource('posts', BlogPostController::class);
 
 // AUTH
 Route::resource('login', LoginController::class)->only('index', 'store');
