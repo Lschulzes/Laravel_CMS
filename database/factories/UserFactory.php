@@ -37,7 +37,7 @@ class UserFactory extends Factory
       'name' => 'John Doe',
       'email' => 'john@doe.com',
       'password' => '$2y$10$o8JH6DfUp9xfbj8uZbeDlODqRz2I9raeu6nPZf59rPHY8dfBhwo9e', // password
-      'is_admin' => true
+      'is_admin' => true,
     ]);
   }
 }
