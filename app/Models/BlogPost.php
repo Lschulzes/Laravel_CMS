@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Scopes\LatestScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BlogPost extends Model
 {
-  protected $fillable = ['title', 'content'];
+  protected $fillable = ['title', 'content', 'user_id'];
   use HasFactory;
   use SoftDeletes;
 
@@ -27,6 +28,7 @@ class BlogPost extends Model
     parent::boot();
     static::deleting(fn (BlogPost $post) => self::onDelete($post));
     static::restoring(fn (BlogPost $post) => self::onRestore($post));
+    static::addGlobalScope(new LatestScope);
   }
 
   public static function onDelete(BlogPost $post)

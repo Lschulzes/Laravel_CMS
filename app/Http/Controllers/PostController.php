@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
-class PostsController extends Controller
+class PostController extends Controller
 {
   public function __construct()
   {
@@ -22,9 +23,9 @@ class PostsController extends Controller
   {
     $posts = BlogPost::withCount([
       'comments',
-      'comments as new_comments' => function ($query) {
-        $query->where('created_at', '>=', '2021-11-28 18:46:13');
-      }
+      // 'comments as new_comments' => function ($query) {
+      //   $query->where('created_at', '>=', '2021-11-28 18:46:13');
+      // }
     ])->get();
     return view('posts.index', ['posts' => $posts]);
   }
@@ -36,7 +37,6 @@ class PostsController extends Controller
    */
   public function create()
   {
-    $this->authorize('create');
     return view('posts.create');
   }
 
@@ -49,6 +49,7 @@ class PostsController extends Controller
   public function store(StorePost $request)
   {
     $validated = $request->validated();
+    $validated['user_id'] = $request->user()->id;
     $post = BlogPost::create($validated);
 
     $request->session()->flash('status', 'The Blog Post Was Created!');
@@ -90,7 +91,7 @@ class PostsController extends Controller
   public function update(StorePost $request, $id)
   {
     $post = BlogPost::findOrFail($id);
-    $this->authorize('update', $post);
+    $this->authorize($post);
     $validated = $request->validated();
     $post->fill($validated)->save();
     $request->session()->flash('status', "Blog post Updated successfully");
