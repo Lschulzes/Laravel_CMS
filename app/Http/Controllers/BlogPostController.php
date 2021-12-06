@@ -22,10 +22,9 @@ class BlogPostController extends Controller
    */
   public function index()
   {
-    $posts = BlogPost::mostComments()->get();
     return view('posts.index', [
-      'posts' => $posts,
-      'mostActiveLastMonth' => User::withMostBlogPostsLastMonth()->take(5)->get()
+      'posts' => BlogPost::mostComments()->with('user')->get(),
+      'mostActiveLastMonth' => User::withMostBlogPostsLastMonth()->take(5)->get(),
     ]);
   }
 
