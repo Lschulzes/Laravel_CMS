@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 
 class BlogPost extends Model
 {
@@ -30,6 +31,7 @@ class BlogPost extends Model
     parent::boot();
     static::deleting(fn (BlogPost $post) => self::onDelete($post));
     static::restoring(fn (BlogPost $post) => self::onRestore($post));
+    static::updating(fn (BlogPost $post) => Cache::forget("blog-post-{$post->id}"));
   }
 
   public function scopeLatest(Builder $query)

@@ -19,7 +19,7 @@
     <p>&nbsp;&nbsp;&nbsp;No Comments</p>
 
     @endif
-
+    @auth
     @can ('update',$post)
     <a href="{{route('posts.edit', ['post' => $post->id])}}" class="btn btn-primary mr-2">EDIT</a>
     @endcan
@@ -46,6 +46,7 @@
     </form>
     @endcan
     @endif
+    @endauth
   </div>
   @endguest
   </div>

@@ -4,11 +4,25 @@
 <h1>{{$post->title}}</h1>
 <p>{{$post->content}}</p>
 <p>Added {{$post->created_at->diffForHumans()}}</p>
-@if(now()->diffInMinutes($post->created_at) < 5000000)
-@badge
-New!
-@endbadge
+@if(now()->diffInMinutes($post->created_at) < 5)
+<div class="alert alert-success" role="alert">
+  <span class="alert-heading">New!</span>
+</div>
 @endif
+@can ('update',$post)
+<div class="d-flex gap-2">
+  <a href="{{route('posts.edit', ['post' => $post->id])}}" class="btn btn-primary mr-2 w-50">EDIT</a>
+  @endcan
+  @can ('delete',$post)
+  <form class=" w-50" action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST">
+    @csrf
+    @method('DELETE')
+    <div>
+      <input class="btn btn-danger  w-100" type="submit" value="{{$post->trashed()? 'FORCE ':''}} DELETE" >
+    </div>
+  </form>
+</div>
+    @endcan
 @if ($post->comments)
 <h3>Comments ({{count($post->comments)}})</h3>
 @foreach ($post->comments as $comment)

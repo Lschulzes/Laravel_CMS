@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Cache;
 
 class BlogPostController extends Controller
 {
@@ -22,9 +20,13 @@ class BlogPostController extends Controller
    */
   public function index()
   {
+    $mostCommented = Cache::remember('blog-post-most-commented', now()->addSeconds(10), fn () => BlogPost::mostComments()->take(5)->get());
+
+    $mostActiveLastMonth = Cache::remember('user-most-active-last-month', 60, fn () => User::withMostBlogPostsLastMonth()->with('blogPosts')->take(5)->get());
     return view('posts.index', [
       'posts' => BlogPost::mostComments()->with('user')->get(),
-      'mostActiveLastMonth' => User::withMostBlogPostsLastMonth()->take(5)->get(),
+      'mostActiveLastMonth' => $mostActiveLastMonth,
+      'mostCommented' => $mostCommented
     ]);
   }
 
@@ -63,9 +65,11 @@ class BlogPostController extends Controller
    */
   public function show($id)
   {
-    $post = BlogPost::with([
-      'comments' => fn ($query) => $query->latest()
-    ])->findOrFail($id);
+    $post = Cache::remember(
+      "blog-post-{$id}",
+      60,
+      fn () => BlogPost::with(['comments' => fn ($query) => $query->latest()])->findOrFail($id)
+    );
     return view('posts.show', ['post' => $post]);
   }
 
