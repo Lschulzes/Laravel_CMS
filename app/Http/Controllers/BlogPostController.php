@@ -93,6 +93,10 @@ class BlogPostController extends Controller
   {
     $post = BlogPost::findOrFail($id);
     $this->authorize($post);
+    if ($post->trashed()) {
+      $post->restore();
+      return redirect()->route('posts.index');
+    }
     $validated = $request->validated();
     $post->fill($validated)->save();
     $request->session()->flash('status', "Blog post Updated successfully");
@@ -109,6 +113,10 @@ class BlogPostController extends Controller
   {
     $post = BlogPost::findOrFail($id);
     $this->authorize($post);
+    if ($post->trashed()) {
+      $post->forceDelete();
+      return redirect()->route('posts.index');
+    }
     $post->delete();
     session()->flash('status', "Blog post Deleted successfully");
     return redirect()->route('posts.index');

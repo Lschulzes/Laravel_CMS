@@ -4,8 +4,10 @@
 <h1>{{$post->title}}</h1>
 <p>{{$post->content}}</p>
 <p>Added {{$post->created_at->diffForHumans()}}</p>
-@if(now()->diffForHumans($post->created_at) < 5)
-  <div class="alert alert-info">New!</div>
+@if(now()->diffInMinutes($post->created_at) < 5000000)
+@badge
+New!
+@endbadge
 @endif
 @if ($post->comments)
 <h3>Comments ({{count($post->comments)}})</h3>

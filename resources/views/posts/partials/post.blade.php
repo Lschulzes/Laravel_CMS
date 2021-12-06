@@ -28,10 +28,24 @@
       @csrf
       @method('DELETE')
       <div>
-        <input class="btn btn-danger" type="submit" value="DELETE" >
+        <input class="btn btn-danger" type="submit" value="{{$post->trashed()? 'FORCE ':''}} DELETE" >
       </div>
     </form>
     @endcan
+    @if ($post->trashed())
+
+    @can ('update',$post)
+    <form action="{{ route('posts.update', ['post' => $post->id]) }}" method="POST">
+      @csrf
+      @method('PUT')
+      <input  id="title" type="hidden" name="title" value="{{old('title', optional($post ?? null)->title) }}">
+      <input  id="title" type="hidden" name="content" value="{{old('content', optional($post ?? null)->content) }}">
+      <div>
+        <input class="btn btn-success" type="submit" value="RESTORE" >
+      </div>
+    </form>
+    @endcan
+    @endif
   </div>
   @endguest
   </div>
