@@ -6,9 +6,6 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BlogPostController;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 
 /*

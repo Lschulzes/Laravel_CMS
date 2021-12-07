@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Constants;
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 
 class BlogPostController extends Controller
 {
@@ -67,7 +69,7 @@ class BlogPostController extends Controller
   {
     $post = Cache::remember(
       "blog-post-{$id}",
-      60,
+      Config::get('constants.options.DEFAULT_CACHE_TIME'),
       fn () => BlogPost::with(['comments' => fn ($query) => $query->latest()])->findOrFail($id)
     );
     $sessionId = session()->getId();
@@ -78,13 +80,13 @@ class BlogPostController extends Controller
     $difference = 0;
     $now = now();
     foreach ($users as $session => $lastVisitTime) {
-      if ($now->diffInMinutes($lastVisitTime) >= 1) $difference--;
+      if ($now->diffInMinutes($lastVisitTime) >= Constants::LIVE_CACHE_TIME) $difference--;
       else $usersUpdate[$session] = $lastVisitTime;
     }
 
     if (
       !array_key_exists($sessionId, $users)
-      || now()->diffInMinutes($users[$sessionId]) >= 1
+      || now()->diffInMinutes($users[$sessionId]) >= Constants::LIVE_CACHE_TIME
     ) $difference++;
 
     $usersUpdate[$sessionId] = $now;
