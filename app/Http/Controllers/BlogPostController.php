@@ -72,35 +72,36 @@ class BlogPostController extends Controller
       Config::get('constants.options.DEFAULT_CACHE_TIME'),
       fn () => BlogPost::with(['comments' => fn ($query) => $query->latest()])->findOrFail($id)
     );
+
     $sessionId = session()->getId();
     $counterKey = "blog-post-{$id}-counter";
     $usersKey = "blog-post-{$id}-users";
     $users = Cache::get($usersKey, []);
     $usersUpdate = [];
     $difference = 0;
-    $now = now();
+
     foreach ($users as $session => $lastVisitTime) {
-      if ($now->diffInMinutes($lastVisitTime) >= Constants::LIVE_CACHE_TIME) $difference--;
+      if ($this->isUserVisitNoLongerAccountedFor($lastVisitTime)) $difference--;
       else $usersUpdate[$session] = $lastVisitTime;
     }
 
-    if (
-      !array_key_exists($sessionId, $users)
-      || now()->diffInMinutes($users[$sessionId]) >= Constants::LIVE_CACHE_TIME
-    ) $difference++;
+    if ($this->isUserVisitNoLongerAccountedFor($users[$sessionId])) $difference++;
 
-    $usersUpdate[$sessionId] = $now;
+    $usersUpdate[$sessionId] = now();
 
     Cache::put($usersKey, $usersUpdate);
 
-    if (!Cache::has($counterKey)) {
-      Cache::forever($counterKey, 1);
-    } else {
-      Cache::increment($counterKey, $difference);
-    }
+    if (!Cache::has($counterKey)) Cache::forever($counterKey, 1);
+    else Cache::increment($counterKey, $difference);
+
     $counter = Cache::get($counterKey);
 
     return view('posts.show', ['post' => $post, 'counter' => $counter]);
+  }
+
+  private function isUserVisitNoLongerAccountedFor(array $lastVisitTime): bool
+  {
+    return now()->diffInMinutes($lastVisitTime) >= Constants::LIVE_CACHE_TIME;
   }
 
   /**
