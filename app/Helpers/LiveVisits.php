@@ -43,7 +43,7 @@ class LiveVisits
   {
     foreach ($this->users as $session => $lastVisitTime) {
       if ($this->isUserVisitNoLongerAccountedFor($lastVisitTime)) $this->difference--;
-      else $this->usersUpdate[$session] = $lastVisitTime;
+      else $this->liveUsers[$session] = $lastVisitTime;
     }
   }
 
@@ -56,11 +56,17 @@ class LiveVisits
   {
     if (!Cache::has($this->counterKey)) Cache::forever($this->counterKey, 1);
     else Cache::increment($this->counterKey, $this->difference);
+    // Cache::forget($this->usersKey);
+    // Cache::forget($this->counterKey);
   }
 
   private function handleCurrentUser(): void
   {
-    if (array_key_exists($this->sessionId, $this->users) || $this->isUserVisitNoLongerAccountedFor($this->users[$this->sessionId])) $this->difference++;
+    if (
+      !array_key_exists($this->sessionId, $this->users)
+      || $this->isUserVisitNoLongerAccountedFor($this->users[$this->sessionId])
+    ) $this->difference++;
+
     $this->liveUsers[$this->sessionId] = $this->now;
   }
 
