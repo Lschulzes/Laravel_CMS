@@ -70,7 +70,35 @@ class BlogPostController extends Controller
       60,
       fn () => BlogPost::with(['comments' => fn ($query) => $query->latest()])->findOrFail($id)
     );
-    return view('posts.show', ['post' => $post]);
+    $sessionId = session()->getId();
+    $counterKey = "blog-post-{$id}-counter";
+    $usersKey = "blog-post-{$id}-users";
+    $users = Cache::get($usersKey, []);
+    $usersUpdate = [];
+    $difference = 0;
+    $now = now();
+    foreach ($users as $session => $lastVisitTime) {
+      if ($now->diffInMinutes($lastVisitTime) >= 1) $difference--;
+      else $usersUpdate[$session] = $lastVisitTime;
+    }
+
+    if (
+      !array_key_exists($sessionId, $users)
+      || now()->diffInMinutes($users[$sessionId]) >= 1
+    ) $difference++;
+
+    $usersUpdate[$sessionId] = $now;
+
+    Cache::put($usersKey, $usersUpdate);
+
+    if (!Cache::has($counterKey)) {
+      Cache::forever($counterKey, 1);
+    } else {
+      Cache::increment($counterKey, $difference);
+    }
+    $counter = Cache::get($counterKey);
+
+    return view('posts.show', ['post' => $post, 'counter' => $counter]);
   }
 
   /**
