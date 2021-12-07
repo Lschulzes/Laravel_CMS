@@ -13,7 +13,9 @@
 <body>
   <header>
     <nav class="d-flex flex-column flex-md-row align-items-center justify-content-between p-3 px-md-4 bg-white border-bottom shadow-sm mb-3">
-      <h5 class="my-0 mr-md-auto font-weight-normal">Laravel App</h5>
+      <a href="{{route('home.index')}}" class="text-decoration-none text-dark">
+        <h5 class="my-0 mr-md-auto font-weight-normal">Laravel App</h5>
+      </a>
       <div class="links my-2 my-md-0 mr-md-3">
         <a class="p-2 text-dark text-decoration-none " href="{{route('home.index')}}">Home</a>
         <a class="p-2 text-dark text-decoration-none " href="{{route('home.contact')}}">Contact</a>
