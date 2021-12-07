@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Constants;
+use App\Helpers\LiveVisits;
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
 use App\Models\User;
@@ -73,36 +74,14 @@ class BlogPostController extends Controller
       fn () => BlogPost::with(['comments' => fn ($query) => $query->latest()])->findOrFail($id)
     );
 
-    $sessionId = session()->getId();
     $counterKey = "blog-post-{$id}-counter";
     $usersKey = "blog-post-{$id}-users";
-    $users = Cache::get($usersKey, []);
-    $usersUpdate = [];
-    $difference = 0;
-
-    foreach ($users as $session => $lastVisitTime) {
-      if ($this->isUserVisitNoLongerAccountedFor($lastVisitTime)) $difference--;
-      else $usersUpdate[$session] = $lastVisitTime;
-    }
-
-    if ($this->isUserVisitNoLongerAccountedFor($users[$sessionId])) $difference++;
-
-    $usersUpdate[$sessionId] = now();
-
-    Cache::put($usersKey, $usersUpdate);
-
-    if (!Cache::has($counterKey)) Cache::forever($counterKey, 1);
-    else Cache::increment($counterKey, $difference);
-
-    $counter = Cache::get($counterKey);
+    $liveVisits = new LiveVisits($counterKey, $usersKey);
+    $counter = $liveVisits->getCount();
 
     return view('posts.show', ['post' => $post, 'counter' => $counter]);
   }
 
-  private function isUserVisitNoLongerAccountedFor(array $lastVisitTime): bool
-  {
-    return now()->diffInMinutes($lastVisitTime) >= Constants::LIVE_CACHE_TIME;
-  }
 
   /**
    * Show the form for editing the specified resource.
