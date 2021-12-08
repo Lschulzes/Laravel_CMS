@@ -74,9 +74,7 @@ class BlogPostController extends Controller
       fn () => BlogPost::with(['comments' => fn ($query) => $query->latest()])->findOrFail($id)
     );
 
-    $counterKey = "blog-post-{$id}-counter";
-    $usersKey = "blog-post-{$id}-users";
-    $liveVisits = new LiveVisits($counterKey, $usersKey);
+    $liveVisits = new LiveVisits("blog-post-{$id}-counter", "blog-post-{$id}-users");
     $counter = $liveVisits->getCount();
 
     return view('posts.show', ['post' => $post, 'counter' => $counter]);

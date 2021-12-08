@@ -56,8 +56,6 @@ class LiveVisits
   {
     if (!Cache::has($this->counterKey)) Cache::forever($this->counterKey, 1);
     else Cache::increment($this->counterKey, $this->difference);
-    // Cache::forget($this->usersKey);
-    // Cache::forget($this->counterKey);
   }
 
   private function handleCurrentUser(): void
