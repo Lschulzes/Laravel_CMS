@@ -1,5 +1,5 @@
 <div class="row mb-5">
-  <div class="d-flex justify-content-between">
+  <div class="d-flex flex-column justify-content-between">
     <h3><a href="{{route('posts.show', ['post' => $post->id])}}">{{$post->title}}</a></h3>
     <span>@tags(['tags' => $post->tags])@endtags</span>
     <div class="comments">
