@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
 
 class BlogPostController extends Controller
 {
@@ -117,8 +118,9 @@ class BlogPostController extends Controller
     $validated = $request->validated();
     unset($validated['thumbnail']);
     $post->fill($validated)->save();
+    $file = $request->file('thumbnail');
+    Storage::putFileAs('thumbnails', $file, $post->id . "." . $file->guessExtension());
 
-    $this->storeFileIfExists($request, 'thumbnail', 'thumbnails');
     $request->session()->flash('status', "Blog post Updated successfully");
     return redirect()->route('posts.show', ['post' => $post->id]);
   }
