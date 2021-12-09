@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class LoginController extends Controller
 {
@@ -50,7 +51,6 @@ class LoginController extends Controller
     if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
       return redirect()->route('login.index');
     }
-
     return view('home.index');
   }
 
