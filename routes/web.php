@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BlogPostController;
+use App\Http\Controllers\PostTagController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,7 +27,11 @@ Route::get('/secret', [HomeController::class, 'secret'])
   ->name('secret')
   ->middleware('can:home.secret');
 
+// POSTS
 Route::resource('posts', BlogPostController::class);
+
+Route::get('/posts/tag/{id}', [PostTagController::class, 'index'])
+  ->name('posts.tags.index');
 
 // AUTH
 Route::resource('login', LoginController::class)->only('index', 'store');

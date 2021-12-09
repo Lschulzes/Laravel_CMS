@@ -21,13 +21,13 @@ class BlogPostController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index($posts = null)
   {
     $mostCommented = Cache::tags(['blog-post'])->remember('blog-post-most-commented', Constants::DEFAULT_CACHE_TIME, fn () => BlogPost::mostComments()->take(5)->get());
 
     $mostActiveLastMonth = Cache::tags(['blog-post'])->remember('user-most-active-last-month', Constants::DEFAULT_CACHE_TIME, fn () => User::withMostBlogPostsLastMonth()->with('blogPosts')->take(5)->get());
     return view('posts.index', [
-      'posts' => BlogPost::mostComments()->with('user')->with('tags')->get(),
+      'posts' => $posts ?? BlogPost::mostComments()->with('user')->with('tags')->get(),
       'mostActiveLastMonth' => $mostActiveLastMonth,
       'mostCommented' => $mostCommented
     ]);
@@ -114,7 +114,7 @@ class BlogPostController extends Controller
     $validated = $request->validated();
     $post->fill($validated)->save();
     $request->session()->flash('status', "Blog post Updated successfully");
-    return redirect()->route('posts.show', ['post' => $post]);
+    return redirect()->route('posts.show', ['post' => $post->id]);
   }
 
   /**
