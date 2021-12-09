@@ -6,7 +6,7 @@
 <form action="{{ route('posts.update', ['post' => $post->id]) }}" method="POST">
   @csrf
   @method('PUT')
-  @include('posts.partials.form')
+  @include('posts.partials._form')
   @can ('update',$post)
   <div>
     <input type="submit" value="Update" class="btn btn-primary btn-block mt-2">

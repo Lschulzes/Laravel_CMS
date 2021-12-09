@@ -27,6 +27,6 @@ class AppServiceProvider extends ServiceProvider
     Blade::aliasComponent('components.badge', 'badge');
     Blade::aliasComponent('components.tags', 'tags');
 
-    view()->composer('posts.index', ActivityComposer::class);
+    view()->composer('posts.partials._activity', ActivityComposer::class);
   }
 }

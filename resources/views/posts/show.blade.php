@@ -1,6 +1,8 @@
 @extends("layouts.app")
 @section('title', $post->title)
 @section('content')
+<div class="row">
+  <div class="col-lg-8">
 @tags(['tags' => $post->tags])
 @endtags
 <h1>{{$post->title}}</h1>
@@ -36,7 +38,10 @@
 <p>{{$comment->created_at->diffForHumans()}}</p>
 </div>
 @endforeach
-
 @endif
-
+</div>
+<div class="col-lg-4 text-center d-lg-block d-none">
+  @include('posts.partials._activity')
+</div>
+</div>
 @endsection

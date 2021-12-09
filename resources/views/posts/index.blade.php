@@ -9,6 +9,8 @@
     <p>No blog posts yet!</p>
     @endforelse
   </div>
-  @include('posts.partials.user')
+  <div class="rmy-5 col-lg-4 text-center d-lg-block d-none">
+    @include('posts.partials._activity')
+  </div>
 </div>
 @endsection

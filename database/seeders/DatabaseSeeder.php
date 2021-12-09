@@ -2,9 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\BlogPost;
-use App\Models\Comment;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Cache;
