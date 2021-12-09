@@ -16,7 +16,7 @@ class UserObserver
    */
   public function created(User $user)
   {
-    Cache::put("user.{$user->id}", $user, Constants::DEFAULT_CACHE_TIME);
+    Cache::put("user.{$user->id}", $user, Constants::LOGGED_USER_CACHE_TIME);
   }
 
   /**
@@ -27,7 +27,7 @@ class UserObserver
    */
   public function updated(User $user)
   {
-    Cache::put("user.{$user->id}", $user, Constants::DEFAULT_CACHE_TIME);
+    Cache::put("user.{$user->id}", $user, Constants::LOGGED_USER_CACHE_TIME);
   }
 
   /**
@@ -49,7 +49,6 @@ class UserObserver
    */
   public function restored(User $user)
   {
-    Cache::add("user.{$user->id}", $user, Constants::DEFAULT_CACHE_TIME);
   }
 
   /**
