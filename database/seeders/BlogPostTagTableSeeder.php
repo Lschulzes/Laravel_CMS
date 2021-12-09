@@ -15,10 +15,15 @@ class BlogPostTagTableSeeder extends Seeder
    */
   public function run()
   {
-    $tags = Tag::all();
-    $blogPosts = BlogPost::all();
-    $blogPosts->each(function (BlogPost $bp) use ($tags) {
-      $bp->tags()->sync($tags->random());
+    $amountOfTags = Tag::all()->count();
+    if (0 === $amountOfTags) $this->command->info("No tags found to assign.");
+    $howManyMin = (int)$this->command->ask('Minimum tags on blog post?', 0);
+    $howManyMax = (int)min($this->command->ask('Maximum tags on blog post?', $amountOfTags), $amountOfTags);
+
+    BlogPost::all()->each(function (BlogPost $bp) use ($howManyMax, $howManyMin) {
+      $take = random_int($howManyMin, $howManyMax);
+      $tags = Tag::inRandomOrder()->take($take)->get()->pluck('id');
+      $bp->tags()->sync($tags);
     });
   }
 }
