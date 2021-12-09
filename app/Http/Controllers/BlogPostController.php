@@ -7,6 +7,7 @@ use App\Helpers\LiveVisits;
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 
@@ -23,10 +24,13 @@ class BlogPostController extends Controller
    */
   public function index()
   {
-    return view('posts.index', [
-      'posts' => BlogPost::mostComments()
-        ->with('user')->with('tags')->get(),
-    ]);
+    $allBlogPosts = Cache::tags(['blog-post'])
+      ->remember(
+        'blog-posts',
+        Constants::DEFAULT_CACHE_TIME,
+        fn () => BlogPost::mostCommentsWithRelations()->get()
+      );
+    return view('posts.index', ['posts' => $allBlogPosts]);
   }
 
   /**
@@ -50,6 +54,8 @@ class BlogPostController extends Controller
     $validated = $request->validated();
     $validated['user_id'] = $request->user()->id;
     $post = BlogPost::create($validated);
+
+    $this->storeFileIfExists($request, 'thumbnail', 'thumbnails');
 
     $request->session()->flash('status', 'The Blog Post Was Created!');
 
@@ -107,8 +113,12 @@ class BlogPostController extends Controller
       $post->restore();
       return redirect()->route('posts.index');
     }
+
     $validated = $request->validated();
+    unset($validated['thumbnail']);
     $post->fill($validated)->save();
+
+    $this->storeFileIfExists($request, 'thumbnail', 'thumbnails');
     $request->session()->flash('status', "Blog post Updated successfully");
     return redirect()->route('posts.show', ['post' => $post->id]);
   }
@@ -130,5 +140,13 @@ class BlogPostController extends Controller
     $post->delete();
     session()->flash('status', "Blog post Deleted successfully");
     return redirect()->route('posts.index');
+  }
+
+  private function storeFileIfExists(Request $request, string $key, string $path): void
+  {
+    if ($request->hasFile($key)) {
+      $file = $request->file($key);
+      $file->store($path);
+    }
   }
 }

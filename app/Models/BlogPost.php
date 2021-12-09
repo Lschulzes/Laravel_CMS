@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Cache;
 
 class BlogPost extends Model
 {
-  protected $fillable = ['title', 'content', 'user_id'];
+  protected $fillable = ['title', 'content', 'user_id', 'thumbnail'];
   use HasFactory;
   use SoftDeletes;
 
@@ -49,6 +49,15 @@ class BlogPost extends Model
   public function scopeMostComments(Builder $query)
   {
     return $query->withCount('comments')->orderBy('comments_count', 'desc');
+  }
+
+  public function scopeMostCommentsWithRelations(Builder $builder)
+  {
+    return $builder
+      ->mostComments()
+      ->latest()
+      ->withCount('comments')
+      ->with(['user', 'tags']);
   }
 
   public static function onDelete(BlogPost $post)
