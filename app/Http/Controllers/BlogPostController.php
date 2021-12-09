@@ -21,15 +21,11 @@ class BlogPostController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index($posts = null)
+  public function index()
   {
-    $mostCommented = Cache::tags(['blog-post'])->remember('blog-post-most-commented', Constants::DEFAULT_CACHE_TIME, fn () => BlogPost::mostComments()->take(5)->get());
-
-    $mostActiveLastMonth = Cache::tags(['blog-post'])->remember('user-most-active-last-month', Constants::DEFAULT_CACHE_TIME, fn () => User::withMostBlogPostsLastMonth()->with('blogPosts')->take(5)->get());
     return view('posts.index', [
-      'posts' => $posts ?? BlogPost::mostComments()->with('user')->with('tags')->get(),
-      'mostActiveLastMonth' => $mostActiveLastMonth,
-      'mostCommented' => $mostCommented
+      'posts' => BlogPost::mostComments()
+        ->with('user')->with('tags')->get(),
     ]);
   }
 

@@ -11,6 +11,6 @@ class PostTagController extends Controller
   public function index($tagID)
   {
     $tag = Tag::findOrFail($tagID);
-    return redirect()->route('posts.index', ['posts' => $tag->blogPosts]);
+    return view('posts.index', ['posts' => $tag->blogPosts]);
   }
 }
