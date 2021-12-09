@@ -116,10 +116,11 @@ class BlogPostController extends Controller
     }
 
     $validated = $request->validated();
-    unset($validated['thumbnail']);
     $post->fill($validated)->save();
-    $file = $request->file('thumbnail');
-    Storage::putFileAs('thumbnails', $file, $post->id . "." . $file->guessExtension());
+    if ($request->hasFile('thumbnail')) {
+      $file = $request->file('thumbnail');
+      $fileName = Storage::putFileAs('thumbnails', $file, $post->id . "." . $file->guessExtension());
+    }
 
     $request->session()->flash('status', "Blog post Updated successfully");
     return redirect()->route('posts.show', ['post' => $post->id]);

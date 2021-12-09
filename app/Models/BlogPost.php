@@ -32,6 +32,11 @@ class BlogPost extends Model
       ->as('tagged');
   }
 
+  public function image()
+  {
+    return $this->hasOne(Image::class);
+  }
+
   public static function boot()
   {
     static::addGlobalScope(new DeletedAdminScope);
