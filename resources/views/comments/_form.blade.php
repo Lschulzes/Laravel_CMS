@@ -11,10 +11,12 @@
       value="{{old('content', optional($post ?? null)->content) }}">
       </textarea>
     </div>
+    @errors @enderrors
     <div class="my-2">
       <input type="submit" value="Add Comment" class="btn btn-secondary btn-block">
     </div>
   </form>
+
 @else
 <a href="{{route('login.index')}}">Login</a> to post Comments
 @endauth

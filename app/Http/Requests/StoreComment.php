@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreComment extends FormRequest
 {
@@ -13,7 +14,7 @@ class StoreComment extends FormRequest
    */
   public function authorize()
   {
-    return false;
+    return Auth::check();
   }
 
   /**
@@ -25,6 +26,14 @@ class StoreComment extends FormRequest
   {
     return [
       'content' => 'required|min:5'
+    ];
+  }
+
+  public function messages()
+  {
+    return [
+      'content.required' => 'The comment is required',
+      'content.min' => 'The comment needs to have at least 5 characteres',
     ];
   }
 }

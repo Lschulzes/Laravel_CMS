@@ -21,12 +21,13 @@ class Comment extends Model
   {
     static::addGlobalScope(new DeletedAdminScope);
     parent::boot();
-    static::updating(fn (Comment $comment) => self::onUpdating($comment));
+    static::creating(fn (Comment $comment) => self::onCreation($comment));
   }
 
-  public static function onUpdating(Comment $comment)
+  public static function onCreation(Comment $comment)
   {
     Cache::tags(['blog-post'])->forget("blog-post-{$comment->blog_post_id}");
+    Cache::tags(['blog-post'])->forget("mostCommented");
   }
 
   public function scopeLatest(Builder $query)
