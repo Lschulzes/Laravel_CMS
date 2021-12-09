@@ -23,11 +23,11 @@ class BlogPostController extends Controller
    */
   public function index()
   {
-    $mostCommented = Cache::remember('blog-post-most-commented', now()->addSeconds(10), fn () => BlogPost::mostComments()->take(5)->get());
+    $mostCommented = Cache::tags(['blog-post'])->remember('blog-post-most-commented', Constants::DEFAULT_CACHE_TIME, fn () => BlogPost::mostComments()->take(5)->get());
 
-    $mostActiveLastMonth = Cache::remember('user-most-active-last-month', 60, fn () => User::withMostBlogPostsLastMonth()->with('blogPosts')->take(5)->get());
+    $mostActiveLastMonth = Cache::tags(['blog-post'])->remember('user-most-active-last-month', Constants::DEFAULT_CACHE_TIME, fn () => User::withMostBlogPostsLastMonth()->with('blogPosts')->take(5)->get());
     return view('posts.index', [
-      'posts' => BlogPost::mostComments()->with('user')->get(),
+      'posts' => BlogPost::mostComments()->with('user')->with('tags')->get(),
       'mostActiveLastMonth' => $mostActiveLastMonth,
       'mostCommented' => $mostCommented
     ]);
@@ -68,16 +68,19 @@ class BlogPostController extends Controller
    */
   public function show($id)
   {
-    $post = Cache::remember(
+    $post = Cache::tags(['blog-post'])->remember(
       "blog-post-{$id}",
       Config::get('constants.options.DEFAULT_CACHE_TIME'),
-      fn () => BlogPost::with(['comments' => fn ($query) => $query->latest()])->findOrFail($id)
+      fn () => BlogPost::with(['comments' => fn ($query) => $query->latest()])->with('tags')->with('user')->findOrFail($id)
     );
 
     $liveVisits = new LiveVisits("blog-post-{$id}-counter", "blog-post-{$id}-users");
     $counter = $liveVisits->getCount();
 
-    return view('posts.show', ['post' => $post, 'counter' => $counter]);
+    return view('posts.show', [
+      'post' => $post,
+      'counter' => $counter,
+    ]);
   }
 
 

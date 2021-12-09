@@ -15,7 +15,7 @@ class LiveVisits
   public function __construct(public string $counterKey, public string $usersKey)
   {
     $this->sessionId = session()->getId();
-    $this->users = Cache::get($usersKey, []);
+    $this->users = Cache::tags(['blog-post'])->get($usersKey, []);
   }
 
   public function getCount()
@@ -31,7 +31,7 @@ class LiveVisits
     $this->updateLiveUsersCache();
     $this->handleCounterCache();
 
-    return Cache::get($this->counterKey);
+    return Cache::tags(['blog-post'])->get($this->counterKey);
   }
 
   private function updateCurrentTime(): void
@@ -49,13 +49,13 @@ class LiveVisits
 
   private function updateLiveUsersCache(): void
   {
-    Cache::put($this->usersKey, $this->liveUsers);
+    Cache::tags(['blog-post'])->put($this->usersKey, $this->liveUsers);
   }
 
   private function handleCounterCache(): void
   {
-    if (!Cache::has($this->counterKey)) Cache::forever($this->counterKey, 1);
-    else Cache::increment($this->counterKey, $this->difference);
+    if (!Cache::tags(['blog-post'])->has($this->counterKey)) Cache::tags(['blog-post'])->forever($this->counterKey, 1);
+    else Cache::tags(['blog-post'])->increment($this->counterKey, $this->difference);
   }
 
   private function handleCurrentUser(): void

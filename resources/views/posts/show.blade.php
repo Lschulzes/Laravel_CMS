@@ -1,6 +1,8 @@
 @extends("layouts.app")
 @section('title', $post->title)
 @section('content')
+@tags(['tags' => $post->tags])
+@endtags
 <h1>{{$post->title}}</h1>
 <p>{{$post->content}}</p>
 <p>Added {{$post->created_at->diffForHumans()}}</p>

@@ -25,6 +25,13 @@ class BlogPost extends Model
     return $this->belongsTo('App\Models\User');
   }
 
+  public function tags()
+  {
+    return $this->belongsToMany('App\Models\Tag')
+      ->withTimestamps()
+      ->as('tagged');
+  }
+
   public static function boot()
   {
     static::addGlobalScope(new DeletedAdminScope);

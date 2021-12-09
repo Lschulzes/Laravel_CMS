@@ -7,8 +7,5 @@
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
 
-.badge {
-  background-color: rgb(15, 168, 15);
-  padding: 1rem;
-  font-weight: 600;
-}
+// Custom Styles
+@import "./global/helpers.scss";

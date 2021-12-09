@@ -1,0 +1,13 @@
+.badge-lg {
+  font-size: 1rem !important;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+}
+
+.light-link {
+  &:hover {
+    color: #fff !important;
+  }
+}
