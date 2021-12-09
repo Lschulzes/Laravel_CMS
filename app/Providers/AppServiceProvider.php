@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
     User::observe(UserObserver::class);
     Blade::aliasComponent('components.badge', 'badge');
     Blade::aliasComponent('components.tags', 'tags');
+    Blade::aliasComponent('components.errors', 'errors');
     view()->composer('posts.partials._activity', ActivityComposer::class);
   }
 }

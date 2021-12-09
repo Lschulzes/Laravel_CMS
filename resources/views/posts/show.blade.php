@@ -33,6 +33,7 @@
 @endcan
 @if ($post->comments)
 <h3>Comments ({{count($post->comments)}})</h3>
+@include('comments._form')
 @foreach ($post->comments as $comment)
 <div style="background: #eee; padding: 0.5rem 1rem 0.25rem 1rem; border-radius: 8px; margin-bottom: 1rem">
 <p>{{$comment->content}}</p>

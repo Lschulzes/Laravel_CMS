@@ -8,16 +8,25 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 
 class Comment extends Model
 {
   use HasFactory;
   use SoftDeletes;
 
+  protected $fillable = ['user_id', 'content'];
+
   public static function boot()
   {
     static::addGlobalScope(new DeletedAdminScope);
     parent::boot();
+    static::updating(fn (Comment $comment) => self::onUpdating($comment));
+  }
+
+  public static function onUpdating(Comment $comment)
+  {
+    Cache::tags(['blog-post'])->forget("blog-post-{$comment->blog_post_id}");
   }
 
   public function scopeLatest(Builder $query)

@@ -38,7 +38,7 @@ class BlogPost extends Model
     parent::boot();
     static::deleting(fn (BlogPost $post) => self::onDelete($post));
     static::restoring(fn (BlogPost $post) => self::onRestore($post));
-    static::updating(fn (BlogPost $post) => Cache::forget("blog-post-{$post->id}"));
+    static::updating(fn (BlogPost $post) => self::onUpdating($post));
   }
 
   public function scopeLatest(Builder $query)
@@ -59,5 +59,10 @@ class BlogPost extends Model
   public static function onRestore(BlogPost $post)
   {
     $post->comments()->delete();
+  }
+
+  public static function onUpdating(BlogPost $post)
+  {
+    Cache::tags(['blog-post'])->forget("blog-post-{$post->id}");
   }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BlogPostController;
+use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostTagController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,8 @@ Route::resource('posts', BlogPostController::class);
 Route::get('/posts/tag/{id}', [PostTagController::class, 'index'])
   ->name('posts.tags.index');
 
+Route::resource('posts.comments', PostCommentController::class)
+  ->only(['store']);
 // AUTH
 Route::resource('login', LoginController::class)->only('index', 'store');
 Route::resource('register', RegisterController::class)->only('index', 'store');

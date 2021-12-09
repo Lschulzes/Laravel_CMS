@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<h3 class="tex-center">Login</h3>
+<h3 class="text-center">Login</h3>
 <form action="{{route('login.store')}}" method="POST">
   @csrf
   <div class="form-group">

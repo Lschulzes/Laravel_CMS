@@ -49,6 +49,7 @@ class UserObserver
    */
   public function restored(User $user)
   {
+    Cache::put("user.{$user->id}", $user, Constants::LOGGED_USER_CACHE_TIME);
   }
 
   /**

@@ -49,9 +49,9 @@ class LoginController extends Controller
   public function store(Request $request)
   {
     if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
-      return redirect()->route('login.index');
+      return redirect()->route('home.index');
     }
-    return view('home.index');
+    return redirect()->route('login.index');
   }
 
   public function logout(Request $request)
