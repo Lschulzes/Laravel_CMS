@@ -4,12 +4,13 @@
 <form
 action="{{route('users.update', ['user' => $user->id])}}"
 method="POST"
-class="form-horizontal">
+class="form-horizontal"
+enctype="multipart/form-data">
 @csrf
 @method('PUT')
 <div class="row">
   <div class="col-md-4">
-    <img src="regrgerg" class="img-thumbnail avatar">
+    <img src="{{$user->image ? $user->image->path : ''}}" class="img-thumbnail avatar">
     <div class="card mt-4">
       <div class="card-body p-4">
         <h6>Upload a different photo</h6>

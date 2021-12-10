@@ -125,10 +125,13 @@ class BlogPostController extends Controller
 
     if ($request->hasFile('thumbnail')) {
       $file = $request->file('thumbnail');
-      Image::where('blog_post_id', '=', $post->id)?->delete();
-      $fileName = Storage::putFileAs('thumbnails', $file, $post->id . "." . $file->guessExtension());
-      $path = Storage::url($fileName);
-      $post->image()->save(Image::create(['path' => $path]));
+      if ($post->image) {
+        $post->image->path = $file->store('thumbnails');
+      } else {
+        $fileName = Storage::putFileAs('thumbnails', $file, $post->id . "." . $file->guessExtension());
+        $path = Storage::url($fileName);
+        $post->image()->save(Image::make(['path' => $path]));
+      }
     }
 
     $request->session()->flash('status', "Blog post Updated successfully");

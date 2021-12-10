@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUser;
+use App\Models\Image;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -75,9 +78,20 @@ class UserController extends Controller
    * @param  \App\Models\User  $user
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, User $user)
+  public function update(UpdateUser $request, User $user)
   {
-    //
+    if ($request->hasFile('avatar')) {
+      $file = $request->file('avatar');
+      if ($user->image)
+        Image::where('imageable_type', User::class)
+          ->where('imageable_id', $user->id)->delete();
+
+      $fileName = Storage::putFileAs('avatar', $file, $user->id . "." . $file->guessExtension());
+      $path = Storage::url($fileName);
+      $user->image()->save(Image::make(['path' => $path]));
+    }
+
+    return redirect()->back()->with('status', 'Profile Image Updated!');
   }
 
   /**
