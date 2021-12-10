@@ -32,8 +32,8 @@ class AuthServiceProvider extends ServiceProvider
 
     Gate::define('home.secret', fn ($user) => $user->is_admin);
 
-    Gate::before(function ($user, $ability) {
-      if ($user->is_admin && in_array($ability, ['delete'])) return true;
-    });
+    // Gate::before(function ($user, $ability) {
+    //   if ($user->is_admin && in_array($ability, ['delete'])) return true;
+    // });
   }
 }

@@ -4,7 +4,7 @@
     <span>@tags(['tags' => $post->tags])@endtags</span>
     <div class="comments">
       <p>
-        Added by {{$post->user->name}}
+        Added by <a href="{{route('users.show', ['user' => $post->user->id])}}">{{$post->user->name}}</a>
       </p>
       @if ($post->comments_count)
       <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comments({{$post->comments_count}})</p>
