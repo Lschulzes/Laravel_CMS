@@ -65,8 +65,14 @@ class BlogPost extends Model
       ->with(['user', 'tags']);
   }
 
+  public function scopeSingleWithRelations(Builder $builder)
+  {
+    return $builder->with(['user', 'tags', 'comments', 'image']);
+  }
+
   public static function onDelete(BlogPost $post)
   {
+    $post->image()->delete();
     $post->comments()->delete();
   }
 

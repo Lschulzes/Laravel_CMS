@@ -7,7 +7,10 @@
   <textarea class="form-control" name="content" id="content" cols="30" rows="10">{{old('content', optional($post ?? null)->content)}}</textarea>
 </div>
 <div class="form-group">
-  <label for="thumbnail">Thumbnail</label>
+  <div class="d-flex flex-column mb-3 mt-1 gap-2">
+    <label for="thumbnail">Thumbnail</label>
+    <img src="{{$post?->image?->path}}" width="100">
+  </div>
   <input type="file" name="thumbnail" id="thumbnail" class="form-control form-control-file">
 </div>
 

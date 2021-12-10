@@ -26,7 +26,14 @@ class StorePost extends FormRequest
     return [
       'title' => 'bail|min:5|max:100|required',
       'content' => 'bail|min:10|max:10000|required',
-      'thumbnail' => 'required|file',
+      'thumbnail' => 'file|image|max:10240',
+    ];
+  }
+
+  public function messages()
+  {
+    return [
+      'thumbnail.max' => 'The image can\'t be bigger than 10Mb'
     ];
   }
 }

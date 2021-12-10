@@ -57,7 +57,12 @@ class BlogPostController extends Controller
     $validated['user_id'] = $request->user()->id;
     $post = BlogPost::create($validated);
 
-    $this->storeFileIfExists($request, 'thumbnail', 'thumbnails');
+    if ($request->hasFile('thumbnail')) {
+      $file = $request->file('thumbnail');
+      $fileName = Storage::putFileAs('thumbnails', $file, $post->id . "." . $file->guessExtension());
+      $path = Storage::url($fileName);
+      $post->image()->save(Image::create(['path' => $path]));
+    }
 
     $request->session()->flash('status', 'The Blog Post Was Created!');
 
@@ -97,7 +102,7 @@ class BlogPostController extends Controller
   public function edit($id)
   {
     $this->authorize('update',  BlogPost::find($id));
-    return view('posts.edit', ['post' => BlogPost::findOrFail($id)]);
+    return view('posts.edit', ['post' => BlogPost::singleWithRelations()->findOrFail($id)]);
   }
 
   /**
@@ -118,8 +123,10 @@ class BlogPostController extends Controller
 
     $validated = $request->validated();
     $post->fill($validated)->save();
+
     if ($request->hasFile('thumbnail')) {
       $file = $request->file('thumbnail');
+      Image::where('blog_post_id', '=', $post->id)?->delete();
       $fileName = Storage::putFileAs('thumbnails', $file, $post->id . "." . $file->guessExtension());
       $path = Storage::url($fileName);
       $post->image()->save(Image::create(['path' => $path]));
@@ -146,13 +153,5 @@ class BlogPostController extends Controller
     $post->delete();
     session()->flash('status', "Blog post Deleted successfully");
     return redirect()->route('posts.index');
-  }
-
-  private function storeFileIfExists(Request $request, string $key, string $path): void
-  {
-    if ($request->hasFile($key)) {
-      $file = $request->file($key);
-      $file->store($path);
-    }
   }
 }
