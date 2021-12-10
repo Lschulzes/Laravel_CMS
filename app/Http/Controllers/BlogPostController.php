@@ -112,9 +112,8 @@ class BlogPostController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function update(StorePost $request, $id)
+  public function update(StorePost $request, BlogPost $post)
   {
-    $post = BlogPost::findOrFail($id);
     $this->authorize($post);
     if ($post->trashed()) {
       $post->restore();
@@ -142,9 +141,8 @@ class BlogPostController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function destroy($id)
+  public function destroy(BlogPost $post)
   {
-    $post = BlogPost::findOrFail($id);
     $this->authorize($post);
     if ($post->trashed()) {
       $post->forceDelete();

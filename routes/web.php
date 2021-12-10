@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BlogPostController;
 use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostTagController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,6 +38,7 @@ Route::get('/posts/tag/{id}', [PostTagController::class, 'index'])
 Route::resource('posts.comments', PostCommentController::class)
   ->only(['store']);
 // AUTH
+Route::resource('user', UserController::class)->only(['show', 'edit', 'update']);
 Route::resource('login', LoginController::class)->only('index', 'store');
 Route::resource('register', RegisterController::class)->only('index', 'store');
 
