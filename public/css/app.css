@@ -11296,3 +11296,8 @@ textarea.form-control-lg {
 .light-link:hover {
   color: #fff !important;
 }
+
+.avatar {
+  width: 128px;
+  height: 128px;
+}

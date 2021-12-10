@@ -61,7 +61,7 @@ class BlogPostController extends Controller
       $file = $request->file('thumbnail');
       $fileName = Storage::putFileAs('thumbnails', $file, $post->id . "." . $file->guessExtension());
       $path = Storage::url($fileName);
-      $post->image()->save(Image::create(['path' => $path]));
+      $post->image()->save(Image::make(['path' => $path]));
     }
 
     $request->session()->flash('status', 'The Blog Post Was Created!');

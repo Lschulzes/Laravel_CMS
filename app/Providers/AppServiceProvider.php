@@ -6,6 +6,7 @@ use App\Http\ViewComposers\ActivityComposer;
 use App\Models\User;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
    */
   public function boot()
   {
+    Schema::defaultStringLength(180);
     User::observe(UserObserver::class);
     Blade::aliasComponent('components.badge', 'badge');
     Blade::aliasComponent('components.tags', 'tags');

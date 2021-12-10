@@ -3,7 +3,7 @@
 @section('content')
 <div class="row">
   <div class="col-md-4">
-    <img src="" class="img-thumbnail avatar">
+    <img src="sd" class="img-thumbnail avatar">
   </div>
   <div class="col-md-8">
     <h3>{{$user->name}}</h3>

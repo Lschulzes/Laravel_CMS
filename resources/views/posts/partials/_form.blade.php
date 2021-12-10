@@ -9,7 +9,9 @@
 <div class="form-group">
   <div class="d-flex flex-column mb-3 mt-1 gap-2">
     <label for="thumbnail">Thumbnail</label>
-    <img src="{{$post?->image?->path}}" width="100">
+    @if (isset($post))
+      <img src="{{$post?->image?->path}}" width="100">
+    @endif
   </div>
   <input type="file" name="thumbnail" id="thumbnail" class="form-control form-control-file">
 </div>
