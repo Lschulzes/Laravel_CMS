@@ -12,16 +12,13 @@ class PostCommentController extends Controller
     $this->middleware('auth');
   }
 
-  public function store($postId, StoreComment $request)
+  public function store(BlogPost $blogPost, StoreComment $request)
   {
-    $blogPost = BlogPost::find($postId);
     $blogPost->comments()->create([
       'content' => $request->input('content'),
       'user_id' => $request->user()->id
     ]);
 
-    $request->session()->flash('status', 'Comment was created!');
-
-    return redirect()->back();
+    return redirect()->back()->with('status', 'Comment was created!');
   }
 }
