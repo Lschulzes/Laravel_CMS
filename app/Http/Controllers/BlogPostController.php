@@ -6,6 +6,7 @@ use App\Helpers\Constants;
 use App\Helpers\LiveVisits;
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
+use App\Models\Image;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -120,6 +121,8 @@ class BlogPostController extends Controller
     if ($request->hasFile('thumbnail')) {
       $file = $request->file('thumbnail');
       $fileName = Storage::putFileAs('thumbnails', $file, $post->id . "." . $file->guessExtension());
+      $path = Storage::url($fileName);
+      $post->image()->save(Image::create(['path' => $path]));
     }
 
     $request->session()->flash('status', "Blog post Updated successfully");

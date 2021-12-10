@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Cache;
 
 class BlogPost extends Model
 {
-  protected $fillable = ['title', 'content', 'user_id', 'thumbnail'];
+  protected $fillable = ['title', 'content', 'user_id'];
   use HasFactory;
   use SoftDeletes;
 
