@@ -3,6 +3,8 @@
 namespace App\Traits;
 
 use App\Models\Tag;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 trait Taggable
 {
@@ -12,13 +14,19 @@ trait Taggable
     static::created(fn ($model) => self::onCreated($model));
   }
 
-  protected static function onUpdate($model)
+  protected static function onUpdate(Model $model)
   {
-    $model->tags()->sync(static::findTagsInContent($model->content));
+    self::getTagsFromContent($model);
   }
 
   protected static function onCreated($model)
   {
+    self::getTagsFromContent($model);
+  }
+
+  protected static function getTagsFromContent($model)
+  {
+    $model->tags()->sync(static::findTagsInContent($model->content));
   }
 
   public function tags()
@@ -27,10 +35,9 @@ trait Taggable
       ->withTimestamps()->as("tagged");
   }
 
-  private static function findTagsInContent(string $content): Tag
+  private static function findTagsInContent(string $content): Collection
   {
-    preg_match_all('/@([^!#$%¨&*()-+=\[\]{}.@]+)@/gm', $content, $tags);
-
-    return Tag::where('name', $tags[1] ?? [])->get();
+    preg_match_all('/@([^!#$%¨&*()-+=\[\]{}.@]+)@/m', $content, $tags);
+    return Tag::whereIn('name', $tags[1] ?? [])->get();
   }
 }
