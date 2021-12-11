@@ -19,7 +19,7 @@ class AddTitleContentToBlogPostTable extends Migration
         $table->string('content')->default('');
       } else {
         $table->string('title');
-        $table->string('content');
+        $table->text('content');
       }
     });
   }
