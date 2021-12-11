@@ -1,6 +1,6 @@
 <div>
   @auth
-  <form action="{{route('posts.comments.store', ['post' => $post->id])}}" method="POST">
+  <form action="{{$route}}" method="POST">
     @csrf
     <div class="form-group">
       <textarea

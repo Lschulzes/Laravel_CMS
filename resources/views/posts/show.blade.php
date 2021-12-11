@@ -41,14 +41,10 @@
 @endcan
 @if ($post->comments)
 <h3>Comments ({{count($post->comments)}})</h3>
-@include('comments._form')
-@foreach ($post->comments as $comment)
-<div style="background: #eee; padding: 0.5rem 1rem 0.25rem 1rem; border-radius: 8px; margin-bottom: 1rem">
-<p>{{$comment->content}}</p>
-<p>{{$comment->created_at->diffForHumans()}}</p>
-<p>Posted by {{$comment->user->name}}</p>
-</div>
-@endforeach
+@commentForm(['route'=> route('posts.comments.store', ['post' => $post->id])])
+@endcommentForm
+@commentList(['comments' => $post->comments])
+@endcommentList
 @endif
 </div>
 <div class="col-lg-4 text-center d-lg-block d-none">

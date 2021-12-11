@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BlogPostController;
 use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostTagController;
+use App\Http\Controllers\UserCommentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,3 +51,6 @@ Route::prefix('/password')->middleware('auth')->name('password.')->group(functio
   Route::post('/reset', [ResetPasswordController::class, 'update'])->name('update');
   Route::post('/email', [ResetPasswordController::class, 'email'])->name('email');
 });
+
+// Comments
+Route::resource('users.comments', UserCommentController::class)->only('store');
