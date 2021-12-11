@@ -24,7 +24,8 @@ class CommentsTableSeeder extends Seeder
     }
     $commentCount = (int)$this->command->ask('Comments qty', 500);
     Comment::factory($commentCount)->make()->each(function ($comment) use ($posts, $users) {
-      $comment->blog_post_id = $posts->random()->id;
+      $comment->commentable_id = $posts->random()->id;
+      $comment->commentable_type = BlogPost::class;
       $comment->user_id = $users->random()->id;
       $comment->save();
     });

@@ -44,6 +44,7 @@ class BlogPost extends Model
     static::deleting(fn (BlogPost $post) => self::onDelete($post));
     static::restoring(fn (BlogPost $post) => self::onRestore($post));
     static::updating(fn (BlogPost $post) => self::onUpdating($post));
+    static::creating(fn (BlogPost $post) => self::onCreating($post));
   }
 
   public function scopeLatest(Builder $query)
@@ -84,5 +85,10 @@ class BlogPost extends Model
   public static function onUpdating(BlogPost $post)
   {
     Cache::tags(['blog-post'])->forget("blog-post-{$post->id}");
+  }
+
+  public static function onCreating(BlogPost $post)
+  {
+    Cache::tags(['blog-post'])->clear();
   }
 }
