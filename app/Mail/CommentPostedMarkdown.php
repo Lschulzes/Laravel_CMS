@@ -30,10 +30,6 @@ class CommentPostedMarkdown extends Mailable implements ShouldQueue
   {
     $subject = "Comment was posted on your post {$this->comment->commentable->title}";
     return $this->from("john@doe.com", "John Doe")
-      // ->attach(
-      //   $this->comment->user->image->path,
-      //   ["as" => "profile_picture.jpeg", "mime" => "image/jpeg"]
-      // )
       ->attachData($this->comment->user->image->path, "profile_pic.jpeg")
       ->subject($subject)
       ->markdown("emails.posts.commented-markdown");
