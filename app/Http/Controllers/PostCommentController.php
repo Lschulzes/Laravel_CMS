@@ -22,7 +22,9 @@ class PostCommentController extends Controller
       'user_id' => $request->user()->id
     ]);
 
-    Mail::to($post->user)->send(
+    $when = now()->addMinute();
+    Mail::to($post->user)->later(
+      $when,
       new CommentPostedMarkdown($comment)
     );
 
