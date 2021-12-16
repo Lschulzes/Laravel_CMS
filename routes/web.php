@@ -58,7 +58,7 @@ Route::prefix('/password')->middleware('auth')->name('password.')->group(functio
 Route::resource('users.comments', UserCommentController::class)->only('store');
 
 // Mails
-Route::get('maillable', function () {
+Route::get('mailable', function () {
   $comment = Comment::find(1);
   return new CommentPostedMarkdown($comment);
-})->name("maillable")->middleware("auth");
+})->name("mailable")->middleware("auth");

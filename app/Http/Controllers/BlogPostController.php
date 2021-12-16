@@ -80,7 +80,7 @@ class BlogPostController extends Controller
     $post = Cache::tags(['blog-post'])->remember(
       "blog-post-{$id}",
       Config::get('constants.options.DEFAULT_CACHE_TIME'),
-      fn () => BlogPost::with(['comments' => fn ($query) => $query->latest(), 'tags', 'user', 'comments.user'])->findOrFail($id)
+      fn () => BlogPost::with(['comments' => fn ($query) => $query, 'tags', 'user', 'comments.user'])->findOrFail($id)
     );
 
     $liveVisits = new LiveVisits("blog-post-{$id}-counter", "blog-post-{$id}-users");

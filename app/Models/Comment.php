@@ -13,25 +13,17 @@ use Illuminate\Support\Facades\Cache;
 
 class Comment extends Model
 {
-  use HasFactory;
-  use SoftDeletes, Taggable;
+  use SoftDeletes, Taggable, HasFactory;
 
   protected $fillable = ['user_id', 'content'];
 
-  public static function boot()
+  public static function booted()
   {
     static::addGlobalScope(new DeletedAdminScope);
-    parent::boot();
-    static::creating(fn (Comment $comment) => self::onCreation($comment));
+    static::addGlobalScope(new LatestScope);
+    parent::booted();
   }
 
-  public static function onCreation(Comment $comment)
-  {
-    if ($comment->commentable_type === BlogPost::class) {
-      Cache::tags(['blog-post'])->forget("blog-post-{$comment->commentable_id}");
-      Cache::tags(['blog-post'])->forget("mostCommented");
-    }
-  }
 
   public function scopeLatest(Builder $query)
   {

@@ -3,7 +3,10 @@
 namespace App\Providers;
 
 use App\Http\ViewComposers\ActivityComposer;
+use App\Models\BlogPost;
+use App\Models\Comment;
 use App\Models\User;
+use App\Observers\BlogPostObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
@@ -29,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
   {
     Schema::defaultStringLength(180);
     User::observe(UserObserver::class);
+    BlogPost::observe(BlogPostObserver::class);
+    Comment::observe(Comment::class);
     Blade::aliasComponent('components.badge', 'badge');
     Blade::aliasComponent('components.tags', 'tags');
     Blade::aliasComponent('components.errors', 'errors');
