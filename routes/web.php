@@ -10,6 +10,8 @@ use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostTagController;
 use App\Http\Controllers\UserCommentController;
 use App\Http\Controllers\UserController;
+use App\Mail\CommentPostedMarkdown;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -54,3 +56,9 @@ Route::prefix('/password')->middleware('auth')->name('password.')->group(functio
 
 // Comments
 Route::resource('users.comments', UserCommentController::class)->only('store');
+
+// Mails
+Route::get('maillable', function () {
+  $comment = Comment::find(1);
+  return new CommentPostedMarkdown($comment);
+})->name("maillable")->middleware("auth");

@@ -7,11 +7,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Storage;
 
-class CommentPosted extends Mailable
+class CommentPostedMarkdown extends Mailable implements ShouldQueue
 {
   use Queueable, SerializesModels;
+
   /**
    * Create a new message instance.
    *
@@ -36,6 +36,6 @@ class CommentPosted extends Mailable
       // )
       ->attachData($this->comment->user->image->path, "profile_pic.jpeg")
       ->subject($subject)
-      ->view("emails.posts.commented");
+      ->markdown("emails.posts.commented-markdown");
   }
 }
