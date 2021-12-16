@@ -78,6 +78,11 @@ class User extends Authenticatable
     );
   }
 
+  public function scopeAdminUsers(Builder $builder): Builder
+  {
+    return $builder->where('is_admin', true);
+  }
+
   public function scopeWithMostBlogPostsLastMonth(Builder $query)
   {
     return $query->withCount([

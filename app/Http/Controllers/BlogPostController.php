@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BlogPostPosted;
 use App\Helpers\Constants;
 use App\Helpers\LiveVisits;
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
 use App\Models\Image;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
@@ -64,6 +63,8 @@ class BlogPostController extends Controller
       $post->image()->save(Image::make(['path' => $path]));
     }
 
+    event(new BlogPostPosted($post));
+
     $request->session()->flash('status', 'The Blog Post Was Created!');
 
     return redirect()->route('posts.show', ['post' => $post->id]);
@@ -80,11 +81,12 @@ class BlogPostController extends Controller
     $post = Cache::tags(['blog-post'])->remember(
       "blog-post-{$id}",
       Config::get('constants.options.DEFAULT_CACHE_TIME'),
-      fn () => BlogPost::with(['comments' => fn ($query) => $query->latest(), 'tags', 'user', 'comments.user'])->findOrFail($id)
+      fn () => BlogPost::with(['comments', 'tags', 'user', 'comments.user'])->findOrFail($id)
     );
 
     $liveVisits = new LiveVisits("blog-post-{$id}-counter", "blog-post-{$id}-users");
     $counter = $liveVisits->getCount();
+
 
     return view('posts.show', [
       'post' => $post,

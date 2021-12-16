@@ -12,7 +12,7 @@ class CommentObserver
   {
     if ($comment->commentable_type === BlogPost::class) {
       Cache::tags(['blog-post'])->forget("blog-post-{$comment->commentable_id}");
-      Cache::tags(['blog-post'])->forget("mostCommented");
+      Cache::tags(['blog-post'])->forget('mostCommented');
     }
   }
 }

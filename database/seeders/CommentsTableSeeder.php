@@ -30,7 +30,7 @@ class CommentsTableSeeder extends Seeder
       $comment->user_id = $users->random()->id;
       $comment->save();
     });
-    Comment::factory(ceil($commentCount / 10))->make()->each(function ($comment) use ($users) {
+    Comment::factory(ceil($commentCount / 10))->make()->each(function (Comment $comment) use ($users) {
       $comment->commentable_id = $users->random()->id;
       $comment->commentable_type = User::class;
       $comment->user_id = $users->random()->id;

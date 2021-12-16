@@ -16,8 +16,6 @@ use Illuminate\Support\Facades\Redis;
 class ThrottleMail implements ShouldQueue
 {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-  public $tries = 2;
-  public $timeout = 6;
   /**
    * Create a new job instance.
    *
