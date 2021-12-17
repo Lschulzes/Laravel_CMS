@@ -12,7 +12,7 @@
   </div>
 
       @else
-      <p>&nbsp;&nbsp;&nbsp;No Comments</p>
+      <p>&nbsp;&nbsp;&nbsp;{{trans_choice("messages.comments",["count" => $post->comments_count])}}</p>
     </div>
   </div>
   @endif

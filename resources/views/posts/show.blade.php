@@ -22,7 +22,7 @@
 <p>Added {{$post->created_at->diffForHumans()}}</p>
 
 <p>Created by {{$post->user->name}}</p>
-<p>Currently being read by {{$counter}} people</p>
+<p>{{trans_choice("messages.people.reading", ["count" =>$counter])}}</p>
 @can ('update',$post)
 <div class="d-flex gap-2">
   <a href="{{route('posts.edit', ['post' => $post->id])}}" class="btn btn-primary mr-2 w-50">EDIT</a>

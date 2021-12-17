@@ -23,6 +23,16 @@ enctype="multipart/form-data">
       <label for="name">Name: </label>
       <input value="{{$user->name}}" type="text" class="form-control" name="name" id="name">
     </div>
+    <div class="form-group mb-3 mt-5">
+      <label for="locale">Language: </label>
+      <select class="form-control" name="locale" id="locale">
+      @foreach (App\Models\User::LOCALES as $locale => $label )
+        <option value="{{ $locale }}" {{$user->locale !== $locale ?:"selected" }}>
+          {{$label}}
+        </option>
+      @endforeach
+      </select>
+    </div>
     <div class="form-group">
       <input type="submit" class="btn btn-primary" value="Save Changes">
     </div>

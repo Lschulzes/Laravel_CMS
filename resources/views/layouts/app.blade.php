@@ -17,16 +17,18 @@
         <h5 class="my-0 mr-md-auto font-weight-normal">Laravel App</h5>
       </a>
       <div class="links my-2 my-md-0 mr-md-3">
-        <a class="p-2 text-dark text-decoration-none " href="{{route('home.index')}}">Home</a>
-        <a class="p-2 text-dark text-decoration-none " href="{{route('home.contact')}}">Contact</a>
-        <a class="p-2 text-dark text-decoration-none " href="{{route('posts.index')}}">Blog Posts</a>
+        <a class="p-2 text-dark text-decoration-none " href="{{route('home.index')}}">{{__("Home")}}</a>
+        <a class="p-2 text-dark text-decoration-none " href="{{route('home.contact')}}">{{__("Contact")}}</a>
+        <a class="p-2 text-dark text-decoration-none " href="{{route('posts.index')}}">{{__("Blog Posts")}}</a>
         @guest
         @if (Route::has('register.index'))
-        <a class="p-2 text-dark text-decoration-none " href="{{route('register.index')}}">Register</a>
+        <a class="p-2 text-dark text-decoration-none " href="{{route('register.index')}}">{{__("Register")}}</a>
         @endif
-        <a class="p-2 text-dark text-decoration-none " href="{{route('login.index')}}">Login</a>
+        <a class="p-2 text-dark text-decoration-none " href="{{route('login.index')}}">{{__("Login")}}</a>
         @else
-        <a class="p-2 text-dark text-decoration-none " href="{{route('posts.create')}}">Add</a>
+        <a class="p-2 text-dark text-decoration-none " href="{{route('posts.create')}}">{{__("Add")}}</a>
+        <a class="p-2 text-dark text-decoration-none " href="{{route("users.edit", ["user"=>Auth::user()])}}">{{__("Edit Profile")}}</a>
+        <a class="p-2 text-dark text-decoration-none " href="{{route("users.show", ["user"=>Auth::user()])}}">{{__("Profile")}}</a>
         <form action="{{route('login.logout')}}" method="POST" id="logout-form" class="d-inline">
           @csrf
           <a class="p-2 text-dark text-decoration-none " href="#"
