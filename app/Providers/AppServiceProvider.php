@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Helpers\Constants;
 use App\Http\ViewComposers\ActivityComposer;
 use App\Models\BlogPost;
 use App\Models\Comment;
@@ -9,6 +10,7 @@ use App\Models\User;
 use App\Observers\BlogPostObserver;
 use App\Observers\CommentObserver;
 use App\Observers\UserObserver;
+use App\Services\Counter;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -41,5 +43,7 @@ class AppServiceProvider extends ServiceProvider
     Blade::aliasComponent('components.comment-form', 'commentForm');
     Blade::aliasComponent('components.comment-list', 'commentList');
     view()->composer('posts.partials._activity', ActivityComposer::class);
+
+    $this->app->singleton(Counter::class, fn ($app) => new Counter(Constants::LIVE_CACHE_TIME));
   }
 }

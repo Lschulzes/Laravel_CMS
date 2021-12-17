@@ -16,6 +16,11 @@ class Counter
   private $users = [];
   private $now;
 
+  public function __construct(private int $timeout = 60)
+  {
+  }
+
+
   public function getCount(string $key, array $tags = null)
   {
     $this->usersKey = $key . "-users";
@@ -72,6 +77,6 @@ class Counter
 
   private function isUserVisitNoLongerAccountedFor(Carbon $lastVisitTime): bool
   {
-    return $this->now->diffInMinutes($lastVisitTime) >= Constants::LIVE_CACHE_TIME;
+    return $this->now->diffInMinutes($lastVisitTime) >= $this->timeout;
   }
 }

@@ -14,7 +14,7 @@ use function PHPUnit\Framework\returnSelf;
 class UserController extends Controller
 {
 
-  public function __construct()
+  public function __construct(private Counter $counter)
   {
     $this->middleware('auth');
     $this->authorizeResource(User::class, 'user');
@@ -58,12 +58,9 @@ class UserController extends Controller
    */
   public function show(User $user)
   {
-    $counterLive = new Counter();
-    $counter = $counterLive->getCount("user-{$user->id}");
-
     return view('users.show', [
       'user' => $user,
-      "counter" => $counter
+      "counter" => $this->counter->getCount("user-{$user->id}")
     ]);
   }
 

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 
 class BlogPostController extends Controller
 {
-  public function __construct()
+  public function __construct(private Counter $counter)
   {
     $this->middleware('auth')->except('index', 'show');
   }
@@ -85,13 +85,9 @@ class BlogPostController extends Controller
       fn () => BlogPost::with(['comments', 'tags', 'user', 'comments.user'])->findOrFail($id)
     );
 
-    $counterLive = new Counter();
-    $counter = $counterLive->getCount("blog-post-{$id}");
-
-
     return view('posts.show', [
       'post' => $post,
-      'counter' => $counter,
+      'counter' => $this->counter->getCount("blog-post-{$id}"),
     ]);
   }
 
