@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
-use App\Helpers\Constants;
+
+use Illuminate\Contracts\Cache\Factory as Cache;
+use Illuminate\Contracts\Session\Session;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
 
 class Counter
 {
@@ -15,9 +16,11 @@ class Counter
   private $difference = 0;
   private $users = [];
   private $now;
+  private $supportsTags;
 
-  public function __construct(private int $timeout = 60)
+  public function __construct(private Cache $cache, private Session $session, private int $timeout = 60)
   {
+    $this->supportsTags = method_exists($cache, 'tags');
   }
 
 
@@ -25,8 +28,9 @@ class Counter
   {
     $this->usersKey = $key . "-users";
     $this->counterKey = $key . "-counter";
-    $this->sessionId = session()->getId();
-    $this->users = Cache::tags(['blog-post'])->get($this->usersKey, []);
+    $this->cache = $this->supportsTags && null !== $tags ? $this->cache->tags($tags) : $this->cache;
+    $this->sessionId = $this->session->getId();
+    $this->users = $this->cache->get($this->usersKey, []);
     return $this->getLiveCounter();
   }
 
@@ -38,7 +42,7 @@ class Counter
     $this->updateLiveUsersCache();
     $this->handleCounterCache();
 
-    return Cache::tags(['blog-post'])->get($this->counterKey);
+    return $this->cache->get($this->counterKey);
   }
 
   private function updateCurrentTime(): void
@@ -56,13 +60,13 @@ class Counter
 
   private function updateLiveUsersCache(): void
   {
-    Cache::tags(['blog-post'])->put($this->usersKey, $this->liveUsers);
+    $this->cache->put($this->usersKey, $this->liveUsers);
   }
 
   private function handleCounterCache(): void
   {
-    if (!Cache::tags(['blog-post'])->has($this->counterKey)) Cache::tags(['blog-post'])->forever($this->counterKey, 1);
-    else Cache::tags(['blog-post'])->increment($this->counterKey, $this->difference);
+    if (!$this->cache->has($this->counterKey)) $this->cache->forever($this->counterKey, 1);
+    else $this->cache->increment($this->counterKey, $this->difference);
   }
 
   private function handleCurrentUser(): void
