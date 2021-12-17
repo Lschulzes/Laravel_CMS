@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-
-use Illuminate\Contracts\Cache\Factory as Cache;
+use App\Contracts\Counter as ContractsCounter;
+use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Session\Session;
 use Carbon\Carbon;
 
-class Counter
+class Counter implements ContractsCounter
 {
   private $counterKey;
   private $usersKey;

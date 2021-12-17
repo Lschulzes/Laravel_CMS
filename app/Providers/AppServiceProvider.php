@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Contracts\Counter as ContractsCounter;
 use App\Helpers\Constants;
 use App\Http\ViewComposers\ActivityComposer;
 use App\Models\BlogPost;
@@ -11,7 +12,7 @@ use App\Observers\BlogPostObserver;
 use App\Observers\CommentObserver;
 use App\Observers\UserObserver;
 use App\Services\Counter;
-use Illuminate\Contracts\Cache\Factory;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
@@ -68,10 +69,12 @@ class AppServiceProvider extends ServiceProvider
     $this->app->singleton(
       Counter::class,
       fn ($app) => new Counter(
-        $app->make(Factory::class),
+        $app->make(Repository::class),
         $app->make(Session::class),
         Constants::LIVE_CACHE_TIME
       )
     );
+
+    $this->app->bind(ContractsCounter::class, Counter::class);
   }
 }
