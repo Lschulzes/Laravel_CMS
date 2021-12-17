@@ -21,6 +21,7 @@ class Comment extends Model
     'commentable_type',
     'commentable_id',
     'deleted_at',
+    'user_id'
   ];
 
   public static function booted()
