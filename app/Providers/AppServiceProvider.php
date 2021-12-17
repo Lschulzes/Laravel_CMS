@@ -33,17 +33,36 @@ class AppServiceProvider extends ServiceProvider
    */
   public function boot()
   {
+    $this->handleDatabase();
+    $this->handleObservers();
+    $this->handleViews();
+    $this->handleDependencies();
+  }
+
+  private function handleDatabase()
+  {
     Schema::defaultStringLength(180);
+  }
+
+  private function handleObservers()
+  {
     User::observe(UserObserver::class);
     BlogPost::observe(BlogPostObserver::class);
     Comment::observe(CommentObserver::class);
+  }
+
+  private function handleViews()
+  {
     Blade::aliasComponent('components.badge', 'badge');
     Blade::aliasComponent('components.tags', 'tags');
     Blade::aliasComponent('components.errors', 'errors');
     Blade::aliasComponent('components.comment-form', 'commentForm');
     Blade::aliasComponent('components.comment-list', 'commentList');
     view()->composer('posts.partials._activity', ActivityComposer::class);
+  }
 
+  private function handleDependencies()
+  {
     $this->app->singleton(Counter::class, fn ($app) => new Counter(Constants::LIVE_CACHE_TIME));
   }
 }
