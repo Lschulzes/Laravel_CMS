@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\Counter;
 use App\Events\BlogPostPosted;
+use App\Facades\Counter;
 use App\Helpers\Constants;
-use App\Helpers\LiveVisits;
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
 use App\Models\Image;
@@ -15,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 
 class BlogPostController extends Controller
 {
-  public function __construct(private Counter $counter)
+  public function __construct()
   {
     $this->middleware('auth')->except('index', 'show');
   }
@@ -87,7 +86,7 @@ class BlogPostController extends Controller
 
     return view('posts.show', [
       'post' => $post,
-      'counter' => $this->counter->getCount("blog-post-{$id}"),
+      'counter' => Counter::getCount("blog-post-{$id}"),
     ]);
   }
 

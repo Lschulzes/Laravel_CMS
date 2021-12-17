@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\Counter;
+use App\Facades\Counter;
 use App\Http\Requests\UpdateUser;
 use App\Models\Image;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-use function PHPUnit\Framework\returnSelf;
 
 class UserController extends Controller
 {
 
-  public function __construct(private Counter $counter)
+  public function __construct()
   {
     $this->middleware('auth');
     $this->authorizeResource(User::class, 'user');
@@ -60,7 +59,7 @@ class UserController extends Controller
   {
     return view('users.show', [
       'user' => $user,
-      "counter" => $this->counter->getCount("user-{$user->id}")
+      "counter" => Counter::getCount("user-{$user->id}")
     ]);
   }
 
