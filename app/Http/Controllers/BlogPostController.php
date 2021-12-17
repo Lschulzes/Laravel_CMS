@@ -8,6 +8,7 @@ use App\Helpers\LiveVisits;
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
 use App\Models\Image;
+use App\Services\Counter;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
@@ -84,8 +85,8 @@ class BlogPostController extends Controller
       fn () => BlogPost::with(['comments', 'tags', 'user', 'comments.user'])->findOrFail($id)
     );
 
-    $liveVisits = new LiveVisits("blog-post-{$id}-counter", "blog-post-{$id}-users");
-    $counter = $liveVisits->getCount();
+    $counterLive = new Counter();
+    $counter = $counterLive->getCount("blog-post-{$id}");
 
 
     return view('posts.show', [
