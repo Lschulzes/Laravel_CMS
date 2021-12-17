@@ -10,7 +10,12 @@ class PostCommentController extends Controller
 {
   public function __construct()
   {
-    $this->middleware('auth');
+    $this->middleware('auth')->only(['store']);
+  }
+
+  public function index($id)
+  {
+    return BlogPost::find($id)->comments->toArray();
   }
 
   public function store(BlogPost $post, StoreComment $request)
