@@ -39,6 +39,8 @@ class UserFactory extends Factory
       'email' => 'john@doe.com',
       'password' => '$2y$10$o8JH6DfUp9xfbj8uZbeDlODqRz2I9raeu6nPZf59rPHY8dfBhwo9e', // password
       'is_admin' => true,
+      'remember_token' => Str::random(10),
+      'api_token' => Str::random(80)
     ]);
   }
 }
