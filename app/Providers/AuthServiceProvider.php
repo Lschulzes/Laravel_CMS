@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Policies\CommentPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
     // 'App\Models\Model' => 'App\Policies\ModelPolicy',
     'App\BlogPost' => 'App\Policies\BlogPostPolicy',
     'App\User' => UserPolicy::class,
+    'App\Comment' => CommentPolicy::class,
   ];
   /**
    * Register any authentication / authorization services.

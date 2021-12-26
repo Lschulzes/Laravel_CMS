@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreComment;
 use App\Http\Resources\Comment as CommentResource;
 use App\Models\BlogPost;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 
 class PostCommentController extends Controller
@@ -44,6 +45,8 @@ class PostCommentController extends Controller
     ]);
 
     event(new CommentPosted($comment));
+
+    return new CommentResource($comment);
   }
 
   /**
@@ -52,9 +55,10 @@ class PostCommentController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function show($id)
+  public function show(BlogPost $post, Comment $comment)
   {
-    //
+    $comment->user;
+    return new CommentResource($comment);
   }
 
   /**
@@ -64,9 +68,12 @@ class PostCommentController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function update(BlogPost $post, $id)
+  public function update(BlogPost $post, Comment $comment, StoreComment $request)
   {
-    //
+    $this->authorize($comment);
+    $comment->content = $request->input('content');
+    $comment->save();
+    return new CommentResource($comment);
   }
 
   /**
@@ -75,8 +82,11 @@ class PostCommentController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function destroy($id)
+  public function destroy(BlogPost $post, Comment $comment)
   {
-    //
+    $this->authorize($comment);
+    $comment->delete();
+
+    return response()->noContent();
   }
 }

@@ -24,3 +24,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
   Route::apiResource('posts.comments', PostCommentController::class);
 });
+
+Route::fallback(function () {
+  return response()->json(['message' => "Endpoint not found"], 404);
+})->name('api.fallback');
