@@ -17,13 +17,6 @@ class Comment extends Model
 
   protected $fillable = ['user_id', 'content'];
 
-  protected $hidden = [
-    'commentable_type',
-    'commentable_id',
-    'deleted_at',
-    'user_id'
-  ];
-
   public static function booted()
   {
     static::addGlobalScope(new DeletedAdminScope);
