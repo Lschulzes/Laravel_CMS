@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Comment;
+use App\Http\Resources\Comment as CommentResource;
 use App\Models\BlogPost;
 use Illuminate\Http\Request;
 
@@ -14,22 +14,23 @@ class PostCommentController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index($id)
+  public function index(BlogPost $post, Request $request)
   {
-    return response()->json([
-      "comments" => Comment::collection(
-        BlogPost::find($id)->comments()->with('user')->get()
-      ),
-    ]);
+    $perPage = $request->input('per_page') ?? 15;
+    return  CommentResource::collection(
+      $post->comments()->with('user')->paginate($perPage)->appends([
+        'per_page' => $perPage
+      ])
+    );
   }
 
   /**
    * Store a newly created resource in storage.
    *
-   * @param  \Illuminate\Http\Request  $request
+   * @param  \Illuminate\Http\BlogPost  $post
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store(BlogPost $post)
   {
     //
   }
@@ -48,11 +49,11 @@ class PostCommentController extends Controller
   /**
    * Update the specified resource in storage.
    *
-   * @param  \Illuminate\Http\Request  $request
+   * @param  \Illuminate\Http\BlogPost  $post
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, $id)
+  public function update(BlogPost $post, $id)
   {
     //
   }

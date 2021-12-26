@@ -18,7 +18,7 @@ class CommentUser extends JsonResource
     return [
       'id' => $this->id,
       'name' => $this->name,
-      'email' => $this->when(rand(0, 1) === 1, $this->email)
+      'email' => $this->when($this->is_admin, $this->email)
     ];
   }
 }
